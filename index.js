@@ -25,6 +25,15 @@ require('./app')(app);
 /**
  * This tells the app instance to listen to a certain port for any requests
  */
-app.listen(app.get('port'), () => {
+var io = require('socket.io').listen(app.listen(app.get('port'), () =>{
     console.log(`ExpressJS server listening to port ${app.get('port')}`);
+}));
+
+io.sockets.on('connection', function (socket) {
+    socket.emit('message', { message: 'welcome to the chat' });
+    socket.on('send', function (data) {
+        io.sockets.emit('message', data);
+    });
 });
+// app.listen(app.get('port'), () => {
+// });
