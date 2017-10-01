@@ -75,7 +75,16 @@ tutorRouter.get('/confirm=:id/pass=:id2', (req, res) =>{
 
 tutorRouter.get('/messages', (req, res) =>{
     var db = require('../../lib/database')();
-    var queryString = `SELECT `
+    var queryString = `SELECT * FROM tblmessagethread WHERE strSenderUserName='${req.session.user.strUsername}' OR strReceiverUserName = '${req.session.user.strUsername}'`
+    db.query(queryString, (err, results, fields) =>{
+        if(err) return console.log(err);
+
+        return renderna(results);
+    });
+
+    function renderna(result){
+        res.render('userHome/views/tutor/tutorThread', {resultsForPug: result, me: [req.session.user.strUsername]});
+    }
 });
 
 //post
@@ -111,6 +120,41 @@ tutorRouter.post('/confirm=:id', (req, res) =>{
         return res.redirect('/tutor');
     });
 })
+
+tutorRouter.post('/messages', (req, res) =>{
+    var db = require('../../lib/database')();
+    var queryString = `SELECT * FROM tblmessagethread WHERE strSenderUserName = ? AND strReceiverUserName = ?`;
+    var queryString2 = `INSERT INTO tblmessagecontent(intMessageThreadID,strMessageContent,dtmMessageSent) VALUES (?,?,NOW())`;
+    queryOne(req.body,req.session.user.strUsername);
+    function queryOne(reqBody,sessionUser){
+        console.log(reqBody)
+        db.query(queryString,[sessionUser,reqBody.username], (err, results, fields) =>{
+            if(err) return console.log(err);
+    
+            if(results.length !== 0){
+                return insertContent(reqBody.content,results[0].intThreadID)
+            }
+            else{
+                return queryTwo(reqBody,sessionUser);
+            }
+        });
+    }
+    function queryTwo(reqBody,sessionUser){
+        var queryString3 = `INSERT INTO tblmessagethread(strSenderUserName, strReceiverUserName) VALUES(?,?)`
+        db.query(queryString3,[sessionUser,reqBody.username], (err,results,fields) =>{
+            if(err) return console.log(err);
+
+            return queryOne(reqBody,sessionUser);
+        });
+    }
+    function insertContent(messageContent,threadID){
+        db.query(queryString2,[threadID,messageContent], (err,results,fields) =>{
+            if(err) return console.log(err)
+
+            return res.redirect('/tutor/messages')
+        });
+    }
+});
 
 // studentRouter
 
@@ -166,6 +210,20 @@ studentRouter.get('/unknot/:id', (req, res) =>{
 
         res.render('userHome/views/student/knotOffers', {resultsForPug: results, reqID: [req.params.id]});
     });
+});
+
+studentRouter.get('/messages', (req, res) =>{
+    var db = require('../../lib/database')();
+    var queryString = `SELECT * FROM tblmessagethread WHERE strSenderUserName='${req.session.user.strUsername}' OR strReceiverUserName = '${req.session.user.strUsername}'`
+    db.query(queryString, (err, results, fields) =>{
+        if(err) return console.log(err);
+
+        return renderna(results);
+    });
+
+    function renderna(result){
+        res.render('userHome/views/student/studentThread', {resultsForPug: result, me: [req.session.user.strUsername]});
+    }
 });
 
 //post
@@ -266,6 +324,41 @@ studentRouter.post('/transaction/:offerID=:reqID', (req, res) =>{
             });
         }
         return res.redirect('/student/myunknots');
+    }
+});
+
+studentRouter.post('/messages', (req, res) =>{
+    var db = require('../../lib/database')();
+    var queryString = `SELECT * FROM tblmessagethread WHERE strSenderUserName = ? AND strReceiverUserName = ?`;
+    var queryString2 = `INSERT INTO tblmessagecontent(intMessageThreadID,strMessageContent,dtmMessageSent) VALUES (?,?,NOW())`;
+    queryOne(req.body,req.session.user.strUsername);
+    function queryOne(reqBody,sessionUser){
+        console.log(reqBody)
+        db.query(queryString,[sessionUser,reqBody.username], (err, results, fields) =>{
+            if(err) return console.log(err);
+    
+            if(results.length !== 0){
+                return insertContent(reqBody.content,results[0].intThreadID)
+            }
+            else{
+                return queryTwo(reqBody,sessionUser);
+            }
+        });
+    }
+    function queryTwo(reqBody,sessionUser){
+        var queryString3 = `INSERT INTO tblmessagethread(strSenderUserName, strReceiverUserName) VALUES(?,?)`
+        db.query(queryString3,[sessionUser,reqBody.username], (err,results,fields) =>{
+            if(err) return console.log(err);
+
+            return queryOne(reqBody,sessionUser);
+        });
+    }
+    function insertContent(messageContent,threadID){
+        db.query(queryString2,[threadID,messageContent], (err,results,fields) =>{
+            if(err) return console.log(err)
+
+            return res.redirect('/student/messages')
+        });
     }
 });
 

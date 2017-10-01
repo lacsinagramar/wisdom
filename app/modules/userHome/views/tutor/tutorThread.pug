@@ -1,0 +1,27 @@
+extends ./tutorTemplate
+block title
+    title Messages
+block loob
+    #content.column
+        h3.ui.huge.header.center.aligned Messages
+        .ui.divided.selection.list
+            each result in resultsForPug
+                if result.strSenderUserName == me
+                    a(href=`/tutor/messages/${result.strReceiverUserName}`).item.fluid
+                        .ui.massive.horizontal.label(style='background-color: #133872; color:white;') #{result.strReceiverUserName}
+                else if result.strReceiverUserName == me
+                    a(href=`/tutor/messages/${result.strSenderUserName}`).item.fluid
+                        .ui.massive.horizontal.label(style='background-color: #133872; color:white;') #{result.strSenderUserName}
+        .ui.hidden.divider
+        h3.ui.header.center.aligned Send a message here
+        form.ui.form(method='POST' action='/tutor/messages')
+            .four.wide.field
+                label Username
+                input(type='text' name='username' onkeyup="this.value = this.value.replace(/[^a-z|0-9|_|.]/, '')" placeholder='Enter Username here' required)
+            .four.wide.field
+                label Your Message
+                textarea(rows='3' cols='4' name='content' placeholder='Write your message here')
+            button(type='submit' class='ui animated fade button' style='background-color:#421f00;color:white;')
+                .visible.content
+                    i.send.icon
+                .hidden.content Send
