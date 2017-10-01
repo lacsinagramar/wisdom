@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PUP-CCIS/express-boilerplate.git"
+    "url": "git+https://github.com/lacsinagramar/wisdom.git"
   },
   "keywords": [
     "Wisdom",
@@ -17,9 +17,9 @@
   "author": "Gramar Lacsina",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PUP-CCIS/express-boilerplate/issues"
+    "url": "https://github.com/lacsinagramar/wisdom.git/issues"
   },
-  "homepage": "https://github.com/PUP-CCIS/express-boilerplate#readme",
+  "homepage": "https://github.com/lacsinagramar/wisdom.git#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
