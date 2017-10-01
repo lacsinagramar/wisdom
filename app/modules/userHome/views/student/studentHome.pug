@@ -1,0 +1,28 @@
+extends ./studentTemplate
+block title
+    title Home
+block loob
+    #content.column
+        .ui.grid
+            .row
+                h1.ui.huge.header
+                    | Planner
+            .ui.divider
+            .row
+                table.ui.single.line.striped.selectable.table
+                    thead
+                        tr
+                            th
+                                | Date and Time of Session
+                            th
+                                | Tutor Username
+                            th
+                                | Subject
+                    tbody
+                        each result in resultsForPug
+                            tr
+                                td #{result.dtmSessionDate}
+                                td #{result.strTutorUserName}
+                                td #{result.strSubjectDesc}
+                                td
+                                    a(type='button' style='background-color: #133872;color: white;').ui.button Request Reschedule

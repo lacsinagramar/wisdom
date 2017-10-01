@@ -1,0 +1,193 @@
+extends ../../../templates/master.pug
+block title
+    title Wisdom
+block content
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/reset.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/site.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/container.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/grid.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/header.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/image.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/menu.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/divider.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/dropdown.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/segment.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/button.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/list.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/icon.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/sidebar.css')
+    //- link(rel='stylesheet', type='text/css', href='/assets/Semantic-UI-CSS-master/components/transition.css')
+    style(type='text/css').
+        .hidden.menu {
+        display: none;
+        }
+        .masthead.segment {
+        min-height: 700px;
+        padding: 1em 0em;
+        }
+        .masthead .logo.item img {
+        margin-right: 1em;
+        }
+        .masthead .ui.menu .ui.button {
+        margin-left: 0.5em;
+        }
+        .masthead h1.ui.header {
+        margin-top: 3em;
+        margin-bottom: 0em;
+        font-size: 4em;
+        font-weight: normal;
+        }
+        .masthead h2 {
+        font-size: 1.7em;
+        font-weight: normal;
+        }
+        .ui.vertical.stripe {
+        padding: 8em 0em;
+        }
+        .ui.vertical.stripe h3 {
+        font-size: 2em;
+        }
+        .ui.vertical.stripe .button + h3,
+        .ui.vertical.stripe p + h3 {
+        margin-top: 3em;
+        }
+        .ui.vertical.stripe .floated.image {
+        clear: both;
+        }
+        .ui.vertical.stripe p {
+        font-size: 1.33em;
+        }
+        .ui.vertical.stripe .horizontal.divider {
+        margin: 3em 0em;
+        }
+        .quote.stripe.segment {
+        padding: 0em;
+        }
+        .quote.stripe.segment .grid .column {
+        padding-top: 5em;
+        padding-bottom: 5em;
+        }
+        .footer.segment {
+        padding: 5em 0em;
+        }
+        .secondary.pointing.menu .toc.item {
+        display: none;
+        }
+        @media only screen and (max-width: 700px) {
+        .ui.fixed.menu {
+        display: none !important;
+        }
+        .secondary.pointing.menu .item,
+        .secondary.pointing.menu .menu {
+        display: none;
+        }
+        .secondary.pointing.menu .toc.item {
+        display: block;
+        }
+        .masthead.segment {
+        min-height: 350px;
+        }
+        .masthead h1.ui.header {
+        font-size: 2em;
+        margin-top: 1.5em;
+        }
+        .masthead h2 {
+        margin-top: 0.5em;
+        font-size: 1.5em;
+        }
+        }
+    //- script(src='/assets/Semantic-UI-CSS-master/components/visibility.js')
+    //- script(src='/assets/Semantic-UI-CSS-master/components/sidebar.js')
+    //- script(src='/assets/Semantic-UI-CSS-master/components/transition.js')
+    script.
+    // Page Contents
+    - var isNotStudent = typeof reqQuery.notStudent !== 'undefined' ? 'Sorry that page is for Student Users only' : '';
+    - var isNotTutor = typeof reqQuery.notTutor !== 'undefined' ? 'Sorry that page is for Tutor Users only' : '';
+    - var hasError = typeof reqQuery.error !== 'undefined' ? 'Something went wrong' : '';
+    .pusher
+        .ui.inverted.vertical.masthead.center.aligned.segment(style='background-image: url("/assets/images/homebg.png");')
+            .ui.container
+                .ui.large.secondary.inverted.simple.menu
+                    .right.item
+                        if hasSessionForPug == 1
+                            - console.log(userTypeForPug)
+                            if userTypeForPug == 'T'
+                                .item 
+                                    | Welcome Tutor! 
+                                    a(href='/tutor').item #{sessionUserForPug}
+                            if userTypeForPug == 'S'
+                                .item 
+                                    | Welcome Student!
+                                    a(href='/student').item #{sessionUserForPug}
+                        else
+                            a(href='/login').ui.inverted.button Log in 
+                            a(href='/signup').ui.inverted.button Sign Up
+            if isNotStudent || isNotTutor || hasError
+                .ui.red.message #{isNotStudent || isNotTutor || hasError}
+            .ui.text.container
+                br
+                br
+                br
+                br
+                br
+                img.ui.image(src="/assets/logo/banner.png" style='width:700px; height:200px; align:middle;')
+                h2 Gain skills and sharpen your knowledge.
+                if hasSessionForPug != 1
+                    a(href='/signup' style='background-color : #133872; color: white;').ui.huge.primary.button
+                        | Get Started 
+                        i.right.arrow.icon
+        .ui.vertical.stripe.segment(style='background-color: #fcfcfc')
+            .ui.middle.aligned.stackable.grid.container
+                .row
+                    .eight.wide.column
+                        h3.ui.header Career Development
+                        p
+                            | According to University of Hawaii Community College, Tutoring allows you the opportunity to develop intellectually, psychologically, and personally.
+                            | Tutors mature and gain self-confidence as they work.
+                            | They develop the ability to get along with others by gaining skills of communication, mediation and negotiation. 
+                        h3.ui.header Keep things in place
+                        p
+                            | Organizing gets you where you’re going. We included a planner that sorts out your schedules to keep you posted.
+                    .six.wide.right.floated.column
+                        img.ui.large.bordered.rounded.image(src='/assets/')
+                .row
+                    .center.aligned.column
+                        a.ui.huge.button(style='background-color : #421f00; color: white;') Check Them Out
+        //- .ui.vertical.stripe.quote.segment
+        //-     .ui.equal.width.stackable.internally.celled.grid
+        //-         .center.aligned.row
+        //-             .column
+        //-                 h3 "What a Company"
+        //-                 p That is what they all say about us
+        //-             .column
+        //-                 h3 "I shouldn't have gone with their competitor."
+        //-                 p
+        //-                     img.ui.avatar.image(src='assets/images/avatar/nan.jpg')
+        //-                     b Nan
+        //-                     |  Chief Fun Officer Acme Toys
+        .ui.vertical.stripe.segment(style='background-color: #fcfcfc')
+            .ui.text.container
+                h3.ui.header Flexibility and convenience
+                p
+                    | One of the best benefits of a tutor is the flexibility of being able fix personalized schedules and timings for classes.
+                h4.ui.horizontal.header.divider
+                    a According to a Study
+                p
+                    | Tutoring can also lead to improvements in self-confidence about reading, motivation for reading, and behavior, both among tutees and among peer or cross-age tutors.
+        .ui.inverted.vertical.footer.segment
+            .ui.container
+                .ui.stackable.inverted.divided.equal.height.stackable.grid
+                    .five.wide.column
+                        h4.ui.inverted.header About
+                        .ui.inverted.link.list
+                            a.item(href='/team') Our Team
+                            a.item(href='#') Contact Us
+                            a.item(href='/mentor') Mentors
+                            .item
+                                span.icon
+                                    i.copyright.icon
+                                span Copyright PUP BSIT 3-3 Batch 2017-2018
+                    .six.wide.column
+                        h4.ui.inverted.header Little quote for you
+                        p
+                            | "In learning you will teach, and in teaching you will learn"

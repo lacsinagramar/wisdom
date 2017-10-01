@@ -1,0 +1,23 @@
+extends ./tutorTemplate
+block title
+    title Notifications
+block loob
+    #content.column
+        .ui.grid
+            .row
+                h1.ui.huge.header Notifications
+            - console.log(resultsForPug)
+            .row
+                h3.left.aligned See the session dates and confirm it by clicking on the item
+            .row
+                .ui.divided.selection.list
+                    each result in resultsForPug
+                        a(href=`/tutor/confirm=${result.intTransactionID}/pass=${result.intRequestID}`).item.fluid
+                            .ui.large.horizontal.label(style='background-color: #133872; color:white;') #{result.strStudentUserName} accepted your offer on #{result.strSubjectDesc} Subject
+                            br
+                            | #{result.intOfferedNoOfSessions} session/s
+                            br
+                            | Price per session: #{result.decPricePerSession}
+                            br
+                            | Total Amount #{result.decTotalAmount}
+

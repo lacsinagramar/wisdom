@@ -1,0 +1,34 @@
+extends ./studentTemplate 
+block title 
+    title Offers 
+block loob 
+    #content.column
+        .row
+            h1.huge.ui.header Tutor Offers in this request
+        .ui.hidden.divider
+        .row
+            h4.subtitle NOTE: If you want to message the tutor, go to their profile by clicking the username
+            table.ui.table
+                thead
+                    tr
+                        th Tutor Username
+                        th Offered Number of Sessions
+                        th Offered Price per Session
+                tbody
+                    each result in resultsForPug
+                        tr
+                            td
+                                a(href=`/profile/${result.strTutorUserName}`).item #{result.strTutorUserName}
+                            td
+                                | #{result.intOfferedNoOfSessions}
+                            td
+                                | #{result.decPricePerSession}
+                            td
+                                a.ui.tiny.button(type='button' href=`/student/transaction=/${result.intOfferID}/and${reqID}` style='background-color : #133872; color:white;')
+                                    span.icon
+                                        i.check.icon
+                                    span Accept
+                                a.ui.tiny.button.red(type='button' href='#')
+                                    span.icon
+                                        i.remove.icon
+                                    span Decline

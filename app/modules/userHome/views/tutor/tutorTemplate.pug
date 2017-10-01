@@ -1,0 +1,97 @@
+extends ../../../../templates/master
+
+block content
+    .template
+        .ui.inverted.huge.borderless.fixed.fluid.menu(style='background-color : #421f00; color: white;')
+            a(href='/').header.item Adventutor
+            .right.menu
+                .item
+                    .ui.small.input
+                        input(placeholder='Search Subject')
+                .ui.simple.dropdown.item
+                    span.icon
+                        i.settings.icon
+                    i.dropdown.icon
+                    .menu
+                        .header Settings
+                        .divider
+                        a(href='/logout').item Logout
+                a(href='/tutor').item Home
+                a(href='/tutor/profile').item Profile
+
+        .ui.grid
+            .row
+                #sidebar.column
+                    .ui.secondary.vertical.fluid.menu
+                        a.item Planner
+                        a(href='/tutor/unknots').item Unknots
+                        a(href='/tutor/notifications').item Notifications
+                        a.item Messages
+                        .ui.hidden.divider
+                        a.item Nav item
+                        a.item Nav item again
+                        a.item One more nav
+                        a.item Another nav item
+                        a.item More navigation
+                        .ui.hidden.divider
+                        a.item Macintosh
+                        a.item Linux
+                        a.item Windows
+                block loob
+        style(type='text/css').
+            body {
+            display: relative;
+            }
+            .darkbrown{
+                background-color: #421f00;
+            }
+            #sidebar {
+            position: fixed;
+            top: 51.8px;
+            left: 0;
+            bottom: 0;
+            width: 16%;
+            background-color: #fcfcfc;
+            padding: 0px;
+            }
+            #sidebar .ui.menu {
+            margin: 2em 0 0;
+            font-size: 16px;
+            }
+            #sidebar .ui.menu > a.item {
+            color: #133872;
+            font-weight: 900;
+            border-radius: 0 !important;
+            }
+            #sidebar .ui.menu > a.item.active {
+            background-color: #337ab7;
+            color: white;
+            border: none !important;
+            }
+            #sidebar .ui.menu > a.item:hover {
+            background-color: #421f00;
+            color: white;
+            }
+            #content {
+            margin-left: 19%;
+            width: 81%;
+            margin-top: 3em;
+            padding-left: 3em;
+            float: left;
+            }
+            #content > .ui.grid {
+            padding-right: 4em;
+            padding-bottom: 3em;
+            }
+            #content h1 {
+            font-size: 36px;
+            }
+            #content .ui.divider:not(.hidden) {
+            margin: 0;
+            }
+            #content table.ui.table {
+            border: none;
+            }
+            #content table.ui.table thead th {
+            border-bottom: 2px solid #eee !important;
+            }

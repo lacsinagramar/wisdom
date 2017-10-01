@@ -1,0 +1,133 @@
+extends ./studentTemplate
+block title
+    title Transaction Form
+block loob
+    - var session;
+    #content.column
+        .row
+            .ui.segment
+                h1.ui.center.aligned.header(style='color : #133872;') Transaction Form
+        .row
+            hr
+            br
+        #parent.row
+            form.ui.form(method='POST' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
+                .three.wide.field
+                    label Tutor
+                    input(type='text' readonly required value=resultsForPug.strTutorUserName)
+                .three.wide.field
+                    label Number of sessions
+                    input(type='number' id='sessions' required readonly value=resultsForPug.intOfferedNoOfSessions)
+                .three.wide.field
+                    label Price per session
+                    input(type='number' value=resultsForPug.decPricePerSession readonly required step='0.01')
+                .three.wide.field
+                    - var count = 1;
+                    label Session Date and Time
+                    - console.log(count + 'and' +resultsForPug.intOfferedNoOfSessions)
+                    while count <= resultsForPug.intOfferedNoOfSessions
+                        input(type='datetime-local' name=`date${count}` required)
+                        - console.log(count)
+                        - count++;
+                .three.wide.field
+                    label Total Amount
+                    input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
+                button(type='submit' class='ui green animated fade button')
+                    .visible.content Confirm
+                    .hidden.content
+                        i.check.icon
+                
+        //- script(type='text/javascript').
+        //-     function formFunction(){
+        //-         var parent = document.getElementById("parent")
+        //-         var formOne = document.getElementById("firstForm")
+        //-         var dates = document.getElementById("meetupDates")
+        //-         session = document.getElementById("sessions").value
+        //-         var total = document.getElementById("pricepersession").value
+        //-         parent.removeChild(formOne)
+        //-         alert('gagawa na form 2')
+        //-         var formTwo = document.createElement("FORM")
+        //-         formTwo.method='POST'
+        //-         formTwo.action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`
+        //-         formTwo.className='ui form'
+        //-         parent.appendChild(formTwo);
+
+        //-         var inlineFields = document.createElement('DIV')
+        //-         inlineFields.className ='inline fields'
+
+        //-         var fieldOne = document.createElement('DIV')
+        //-         fieldOne.className = 'four wide field'
+
+        //-         var labelOne = document.createElement('LABEL')
+        //-         labelOne.appendChild(document.createTextNode("Tutor Username"))
+
+        //-         var inputOne = document.createElement('INPUT')
+        //-         inputOne.type='text'
+        //-         inputOne.name='username'
+        //-         inputOne.readOnly = true;
+        //-         inputOne.value= resultsForPug.strTutorUserName;
+
+        //-         var fieldTwo = document.createElement('DIV')
+        //-         fieldTwo.className='ui field'
+
+        //-         var labelTwo = document.createElement('LABEL')
+        //-         labelTwo.appendChild(document.createTextNode("Meetup Date/s"))
+
+        //-         fieldTwo.appendChild(labelTwo)
+
+        //-         var n = 1;
+        //-         while (n <= session){
+        //-             var iterateField = document.createElement('DIV')
+        //-             iterateField.className = 'four wide field'
+
+        //-             var iterateInput = document.createElement('INPUT')
+        //-             iterateInput.type='datetime-local'
+        //-             iterateInput.name='datetime'
+        //-             iterateInput.required = true;
+
+        //-             iterateField.appendChild(iterateInput)
+        //-             fieldTwo.appendChild(iterateField)
+        //-             alert(n)
+        //-             n++
+        //-         }
+        //-         var amountDiv = document.createElement("DIV")
+        //-         amountDiv.className = 'four wide field'
+        //-         var amountLabel = document.createElement("LABEL")
+        //-         amountLabel.appendChild(document.createTextNode("Total Amount"))
+
+        //-         var amountField = document.createElement("INPUT")
+        //-         amountField.type = 'number'
+        //-         amountField.required = true;
+        //-         amountField.value = session*pricepersession;
+        //-         amountField.name = 'totalamount'
+        //-         amountField.readOnly = true;
+        //-         amountField.step='0.01';
+
+        //-         amountDiv.appendChild(amountLabel)
+        //-         amountDiv.appendChild(amountField)
+
+        //-         var formButton = document.createElement("BUTTON")
+        //-         formButton.className = 'ui green animated fade button'
+        //-         formButton.type = 'submit'
+
+        //-         var btnVisContent = document.createElement("DIV")
+        //-         btnVisContent.className = 'visible content'
+        //-         btnVisContent.appendChild(document.createTextNode("Submit"))
+        //-         formButton.appendChild(btnVisContent)
+
+        //-         var btnHidContent = document.createElement("DIV")
+        //-         btnHidContent.className = 'hidden content'
+        //-         var icon = document.createElement("I")
+        //-         icon.className = 'check icon'
+        //-         btnHidContent.appendChild(icon)
+
+        //-         formButton.appendChild(btnHidContent)
+
+        //-         fieldOne.appendChild(labelOne);
+        //-         fieldOne.appendChild(inputOne);
+        //-         inlineFields.appendChild(fieldOne);
+        //-         formTwo.appendChild(inlineFields);
+        //-         formTwo.appendChild(fieldTwo)
+        //-         formTwo.appendChild(amountDiv)
+        //-         formTwo.appendChild(formButton)
+        //-     }

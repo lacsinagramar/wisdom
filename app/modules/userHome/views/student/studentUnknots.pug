@@ -1,0 +1,35 @@
+extends ./studentTemplate
+
+block title
+    title My Unknots
+block loob
+    #content.column
+        .row
+            h1.ui.huge.header
+                | My Unknots
+        .ui.hidden.divider
+        .row
+            table.ui.single.line.striped.selectable.table
+                thead
+                    tr
+                        th
+                            | Subject
+                        th
+                            | Budget
+                        th
+                            | Tutor Offers
+                tbody
+                    each result in resultsForPug
+                        .two.columns
+                            // naka each rin to beshie
+                            tr
+                                .column
+                                    td
+                                        | #{result.strSubjectDesc}
+                                    td
+                                        | #{result.decBudgetPerSession}
+                                    td
+                                        a.ui.animated.button(type='button' href=`/student/unknot/${result.intRequestID}` style='background-color : #133872; color: white;')
+                                            .visible.content See Offers Here
+                                            .hidden.content
+                                                i.right.arrow.icon

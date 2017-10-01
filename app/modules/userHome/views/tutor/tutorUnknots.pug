@@ -1,0 +1,39 @@
+extends ./tutorTemplate
+
+block title
+    title Unknots
+block loob
+    - var resultss = resultsForPug;
+    #content.column
+        .ui.grid
+            .row
+                h1.ui.huge.header Unknots
+            .ui.divider
+            .row
+                table.ui.single.line.striped.selectable.table
+                    thead
+                        tr
+                            th 
+                                | Student Username
+                            th
+                                | Subject
+                            th
+                                | Budget per Session
+                            th
+                                | Requested Number of Sessions
+                    //- naka each
+                    tbody
+                    - console.log(resultsForPug)
+                    each result in resultss
+                        tr
+                            td #{result.strStudentUserName}
+                            td #{result.strSubjectDesc}
+                            td #{result.decBudgetPerSession}
+                            td #{result.intNoOfSessions}
+                            td
+                                a.ui.button.brown(type='button' href='#')
+                                    span.icon
+                                        i.mail.icon
+                                    span Message
+                                //- button
+                                a.ui.button.brown(type='button' href=`/tutor/offer/${result.intRequestID}`) Offer Service

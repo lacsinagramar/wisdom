@@ -1,0 +1,63 @@
+extends ../../../templates/base
+block title
+    title Login
+block body
+    - var hasIncorrect = typeof incorrect !== 'undefined' ? 'Incorrect username or password.' : ''
+    - var hasUnauthorized = typeof unauthorized !== 'undefined' ? 'You are not authorized to view the page you\'re trying to access. Please log in first.' : ''
+    - var hasSuccess = typeof success !=='undefined' ? 'Successfully Signed up' : ''
+    style(type='text/css').
+        body {
+        background-image: url("/assets/images/homebg.png");
+        }
+        body > .grid {
+        height: 100%;
+        }
+        .image {
+        margin-top: -100px;
+        }
+        .column {
+        max-width: 450px;
+        }
+        .change{
+            color : #421f00
+        }
+    .ui.middle.aligned.center.aligned.grid
+        .column
+            if hasIncorrect || hasUnauthorized
+                .ui.red.message
+                    | #{hasIncorrect || hasUnauthorized}
+            if hasSuccess
+                .ui.green.message
+                    | #{hasSuccess}
+            - var rand = Math.floor((Math.random() * 2) + 1);
+            if rand == 1
+                h2.ui.image.header(style='color : #133872;')
+                    img.image(src='/assets/logo/logo.png' style='width:100px;height:100px;')
+                    .content
+                        | Log-in to your account
+            if rand == 2
+                h2.ui.image.header(style='color : #421f00;')
+                    img.image(src='/assets/logo/logo.png' style='width:100px;height:100px;')
+                    .content
+                        | Log-in to your account
+            form.ui.large.form(method="POST" action='/login')
+                .ui.segment
+                    .field
+                        .ui.left.icon.input
+                            i.user.icon
+                            input(type='text', name='username', placeholder='Username')
+                    .field
+                        .ui.left.icon.input
+                            i.lock.icon
+                            input(type='password', name='password', placeholder='Password')
+                    if rand == 1
+                        button(type="submit" class="ui fluid large button" style='background-color : #133872; color: white;') Login
+                    if rand == 2
+                        button(type="submit" class="ui fluid large brown button" style='background-color : #421f00; color: white;') Login
+                .ui.error.message
+            .ui.message
+                | Don't have an account?
+                if rand == 1
+                    a(href='/signup') Sign Up 
+                if rand == 2
+                    a(href='/signup').change Sign Up

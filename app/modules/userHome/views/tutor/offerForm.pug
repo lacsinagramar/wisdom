@@ -1,0 +1,19 @@
+extends ./tutorTemplate
+block title
+    title Offer Service
+block loob
+    #content.column
+        .row
+            .ui.segment
+                h1.ui.center.aligned.header(style='color : #421f00;') Service Offering Form
+        form.ui.form(method='POST' action=`/tutor/offer/${reqID}`)
+            .three.wide.field
+                label Number of sessions
+                input(type='number' name='sessions' required)
+            .three.wide.field
+                label Price per session
+                input(type='number' name='pricepersession' required)
+            button(type='submit' class='ui green animated fade button')
+                .visible.content Submit
+                .hidden.content
+                    i.check.icon
