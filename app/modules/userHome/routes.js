@@ -183,7 +183,7 @@ studentRouter.get('/transaction=/:offerID/and:reqID', (req,res) =>{
 
 studentRouter.get('/transaction/:offerID=:reqID', authMiddleware.authTransac,(req, res) =>{
     var db = require('../../lib/database')();
-    db.query(`SELECT intOfferedNoOfSessions, decPricePerSession, strTutorUserName from tbloffer WHERE intRequestID = ?`,[req.params.offerID], (err, results, fields) =>{
+    db.query(`SELECT intOfferedNoOfSessions, decPricePerSession, strTutorUserName from tbloffer WHERE intRequestID = ? AND intOfferID = ?`,[[req.params.reqID],[req.params.offerID]], (err, results, fields) =>{
         if(err) return console.log(err);
 
         res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID});
@@ -233,25 +233,27 @@ studentRouter.post('/knotform', (req, res) =>{
     console.log(subjectUpper);
     firstQuery(subjectUpper);
 
+    function newQuery(result,username,budget,sessions){
+        var queryString = `INSERT INTO tblrequest(strSubjectCode,strStudentUserName,decBudgetPerSession,intNoOfSessions) VALUES(?,?,?,?)`;
+        var db = require('../../lib/database')();
+        db.query(queryString,[result.strSubjectCode,username,budget,sessions], (err, results, fields) =>{
+            if(err) return console.log(err)
+            console.log('REQUEST ADDED');
+
+            return res.redirect('/student/myunknots');
+        });
+    }
+
     function firstQuery(subjectCode){
         console.log('nasa first query ako');
         var db = require('../../lib/database')();
         db.query(`SELECT * FROM tblsubjects WHERE strSubjectDesc = ?`, [subjectCode], (err, results, fields) =>{
-            if(err) return console.log(err)
-
-            if(results.length !== 0){
-                var queryString = `INSERT INTO tblrequest(strSubjectCode,strStudentUserName,decBudgetPerSession,intNoOfSessions) VALUES(?,?,?,?)`;
-
-                db.query(queryString,[results.strSubjectCode, req.session.user.strUsername, req.body.budget, req.body.sessions], (err, results, fields) =>{
-                    if(err) return console.log(err)
-                    console.log('REQUEST ADDED');
-
-                    res.redirect('/student/myunknots');
-                });
-            }
+            if(err) return console.log(err);
+            console.log(results[0]);
+            if(results[0] && results[0].length !== 0) return newQuery(results[0], req.session.user.strUsername, req.body.budget, req.body.sessions);
             else{
                 console.log("punta ako second query");
-                secondQuery(req.session.user.strUsername, req.body.budget, req.body.sessions,subjectCode)
+                return secondQuery(req.session.user.strUsername, req.body.budget, req.body.sessions,subjectCode)
             }
         });
     }
@@ -269,7 +271,7 @@ studentRouter.post('/knotform', (req, res) =>{
                 console.log(""+subjCode+"is added to DATABASE");
             });
             console.log('punta ako third query')
-            thirdQuery (subjCode,username,budget,sessions);
+            return thirdQuery (subjCode,username,budget,sessions);
         });
     }
     function thirdQuery(subjectCode,username,budget,sessions){
