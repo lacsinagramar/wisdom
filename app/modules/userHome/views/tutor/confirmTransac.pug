@@ -5,8 +5,7 @@ block loob
     #content.column
         h2.ui.header.center.aligned Session Dates
         - var n = 1;
-        form.ui.form(method='POST' action=`/tutor/confirm=${idForPug}`)
-            input(type='hidden' name='reqid' value=reqIDForPug required)
+        form.ui.form(method='POST' action=`/tutor/confirm=${idForPug}/${reqIDForPug}`)
             each result in resultsForPug
                 .four.wide.field
                     label Session #{n++}

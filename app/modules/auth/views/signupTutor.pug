@@ -6,40 +6,38 @@ block body
         h1.ui.center.aligned.header(style='color : white;') TUTOR SIGNUP FORM
     form.ui.form(method='POST' action='/signup/tutor')
         h4.ui.header Name
-        .four.wide.field
+        .four.wide.field.required
             label First
             input(type='text' name='firstname' placeholder='Jane' required)
-        .four.wide.field
+        .four.wide.field.required
             label Last
             input(type='text' name='lastname' placeholder='Doe' required)
         br
-        .three.wide.field
+        .three.wide.field.required
             label Birthday
             input(type='date' name='birthday' required)
         h4.ui.header Contact Info
-        .inline.fields
-            .three.wide.field
-                label Cellphone
-                input(type='text' name='cellphone' placeholder='09XXXXXXXXX' pattern=".{11,11}" onkeyup="this.value = this.value.replace(/[^0-9]/, '')" required)
-            .three.wide.field
-                label Telephone
-                input(type='text' name='telephone' placeholder='XXXXXXX' pattern=".{7,7}" onkeyup="this.value = this.value.replace(/[^0-9]/, '')")
-        br
+        .three.wide.field.required
+            label Cellphone
+            input(type='text' name='cellphone' placeholder='09XXXXXXXXX' pattern=".{11,11}" onkeyup="this.value = this.value.replace(/[^0-9]/, '')" required)
         .three.wide.field
+            label Telephone
+            input(type='text' name='telephone' placeholder='XXXXXXX' pattern=".{7,7}" onkeyup="this.value = this.value.replace(/[^0-9]/, '')")
+        br
+        .three.wide.field.required
             label Rate per session
             input(type='number' name='rate' placeholder='350.00' required)
         .eight.wide.field
             label Achievements
             textarea(name = 'achievements')
-        .five.wide.field
-            h4.ui.header Subjects you Teach
-            label Please Input one subject only. 
-                .ui.tiny.message.blue NOTE: You can always add subjects on your profile settings
+        .five.wide.field.required
+            label Subjects you Teach 
+            .ui.tiny.message.blue NOTE: If you're entering more than 1 subject, separate it with comma ","
             input(type='text' name='subjects' placeholder='i.e Hoelogy')
-        .four.wide.field
+        .four.wide.field.required
             label Username
             input(type='text' name='username' placeholder='Choose a username' onkeyup="this.value = this.value.replace(/[^a-z|0-9|_|.]/, '')" required)
-        .four.wide.field
+        .four.wide.field.required
             label Password
             input(type='password' name='password' placeholder='Choose a password' required)
         button(type='submit' class='ui green animated fade button')

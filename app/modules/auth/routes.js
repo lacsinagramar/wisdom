@@ -59,32 +59,74 @@ signupRouter.post('/tutor', (req,res) =>{
 
     var contactInfo = req.body.cellphone + '/' + req.body.telephone;
     db.query(queryString, [req.body.username, req.body.password, req.body.firstname, req.body.lastname, req.body.birthday, contactInfo, 'T'], (err, results, fields) =>{
-        if (err) throw err;
+        if (err) return console.log(err);
 
-        db.query(queryString2, ['T', req.body.username, req.body.rate, req.body.achievements], (err, results, fields) =>{
-            if (err) throw err;
+        return db.query(queryString2, ['T', req.body.username, req.body.rate, req.body.achievements], (err, results, fields) =>{
+            if (err) return console.log(err);
 
-            res.redirect('/login?success');
         });
     });
 
-    var queryString3 = `INSERT INTO tblsubjects VALUES(?,?)`
-    var tutorSubjects = req.body.subjects;
+    var queryString3 = `INSERT INTO tblsubjects(strSubjectCode,strSubjectDesc) VALUES(?,?)`
+    var tutorSubjects = req.body.subjects.split(',');
     var queryString4 = `INSERT INTO tbltutorteaches (strTutorUserName,strSubjectCode) VALUES(?,?)`
-    var subjCode;
-    tutorSubjects = tutorSubjects.toUpperCase();
-    var x;
-    eme1(tutorSubjects,queryString3,queryString4,req.body.username);
-    function eme1(keme1,keme2,keme3,keme4){
-        db.query(`select count(strSubjectCode) as subjCount from tblsubjects`, (err, results, fields)=>{
-            x = results[0].subjCount;
-            subjCode = "SUBJ" + x;
-            console.log("x is "+subjCode);
-            eme2 (keme1,subjCode,keme2,keme3,keme4)
+    addSubjects(tutorSubjects,queryString3,queryString4,req.body.username, function() {
+        res.redirect('/login?success')
+    });
+    function addSubjects(subjects,insrtToTblSubj,insrtToTutorTeaches,username,callback){
+        var subject = subjects.pop();
+        subject = subject.toUpperCase();
+        console.log(subject);
+        verify(subject,insrtToTblSubj,insrtToTutorTeaches,username, function() {
+            console.log(subject.length);
+            if(subjects.length > 0) return addSubjects(subjects,insrtToTblSubj,insrtToTutorTeaches, username, callback)
+            return callback();
         });
     }
-    function eme2(keme1,x,keme2,keme3,keme4){
-        myQuery(keme1,x,keme2,keme3,keme4);
+    function verify(subjectDesc, insrtToTblSubj, insrtToTutorTeaches, username, callback){
+        db.query('SELECT * FROM tblsubjects WHERE strSubjectDesc = ?', [subjectDesc], (err, results, fields) =>{
+            if(err) return console.log(err)
+            console.log(results[0]);
+            console.log(results.length);
+            if(results.length > 0){
+                return addSubjectToTblTutorTeaches(results[0].strSubjectCode, insrtToTutorTeaches, username, function() {
+                    return callback();
+                });
+            } 
+            else{
+                return getSubjectCode(subjectDesc,insrtToTblSubj,insrtToTutorTeaches,username,function() {
+                    return callback();
+                });
+            }
+        });
+    }
+    function getSubjectCode(subject, insrtToTblSubj, insrtToTutorTeaches,username, callback){
+        db.query(`select count(strSubjectCode) as subjCount from tblsubjects`, (err, results, fields)=>{
+            var x = results[0].subjCount;
+            var subjCode = "SUBJ" + x;
+            console.log("x is "+subjCode);
+            addSubjectToTblSubject(subjCode,subject,insrtToTblSubj, insrtToTutorTeaches, username, function() {
+                return callback();
+            });
+        });
+    }
+    function addSubjectToTblSubject(subjCode,subjDesc,insrtToTblSubj,insrtToTutorTeaches, username, callback){
+        db.query(insrtToTblSubj, [subjCode,subjDesc], (err, results, fields) =>{
+            if (err) return console.log(err)
+
+            console.log('subject added to table');
+            return addSubjectToTblTutorTeaches(subjCode,insrtToTutorTeaches,username, function() {
+                return callback();
+            });
+        });
+    }
+    function addSubjectToTblTutorTeaches(subjCode,insrtToTutorTeaches,username,callback){
+        db.query(insrtToTutorTeaches,[username, subjCode], (err, results, fields) =>{
+            if (err) return console.log(err);
+
+            console.log("Subject added to tutor");
+            return callback();
+        })
     }
 });
 
@@ -105,55 +147,6 @@ signupRouter.post('/student', (req,res) =>{
         });
     });
 });
-
-function myQuery(subjectDesc, subjCode, queryString3, queryString4, username){
-    var db = require('../../lib/database')();
-    db.query(`SELECT * from tblsubjects WHERE strSubjectDesc = ?`, [subjectDesc], (err, results, fields)=>{
-        if(err) return console.log(err);
-        
-        if(results.length !==0){
-            db.query(queryString4,[username,results[0].strSubjectCode], (err, results, fields) =>{
-                if(err) return console.log(err);
-
-                console.log('SUBJECTS ADDED TO TUTOR')
-            });
-        }
-        else{
-            console.log(subjectDesc);
-            db.query(queryString3,[subjCode, subjectDesc], (err, results, fields) =>{
-                if(err) return console.log(err);
-
-            db.query(`SELECT * from tblsubjects WHERE strSubjectDesc = ?`, [subjectDesc], (err, results, fields)=>{
-                if(err) return console.log(err);
-                
-                db.query(queryString4,[username,results[0].strSubjectCode], (err, results, fields)=>{
-                    if(err) return console.log(err);
-
-                    console.log('SUBJECTS ADDED TO TUTOR')
-                });
-                });
-            });
-        }
-    });
-}
-
-// function countSubjects(){
-//     var final;
-//     var db = require('../../lib/database')();
-//     db.query(`select count(strSubjectCode) as subjCount from tblsubjects`, (err, results, fields)=>{
-//         var x = results[0].subjCount;
-//         var y = "SUBJ" + x;
-//         console.log(y);
-//         balik(y)
-//     });
-//     function balik(pangreturn){
-//         final = pangreturn;
-//         console.log("Final: "+final);
-//     }
-//     console.log("irereturn na si "+final);
-//     return final;
-// }
-
 exports.login = loginRouter;
 exports.logout = logoutRouter;
 exports.signup = signupRouter;

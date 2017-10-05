@@ -6,29 +6,27 @@ block body
         h1.ui.center.aligned.header(style='color: white;') STUDENT SIGNUP FORM
     form.ui.form(method='POST' action='/signup/student')
         h4.ui.header Name
-        .inline.fields
-            .four.wide.field
-                label First
-                input(type='text' name='firstname' placeholder='Jane' required)
-            .four.wide.field
-                label Last
-                input(type='text' name='lastname' placeholder='Doe' required)
+        .four.wide.field.required
+            label First
+            input(type='text' name='firstname' placeholder='Jane' required)
+        .four.wide.field.required
+            label Last
+            input(type='text' name='lastname' placeholder='Doe' required)
         br
-        .three.wide.field
+        .three.wide.field.required
             label Birthday
             input(type='date' name='birthday' required)
         h4.ui.header Contact Info
-        .inline.fields
-            .three.wide.field
-                label Cellphone
-                input(type='text' name='cellphone' placeholder='09XXXXXXXXX' onkeyup="this.value = this.value.replace(/[^0-9]/, '')" pattern=".{11,11}" required)
-            .three.wide.field
-                label Telephone
-                input(type='text' name='telephone' placeholder='XXXXXXX' onkeyup="this.value = this.value.replace(/[^0-9]/, '')")
-        .four.wide.field
+        .three.wide.field.required
+            label Cellphone
+            input(type='text' name='cellphone' placeholder='09XXXXXXXXX' onkeyup="this.value = this.value.replace(/[^0-9]/, '')" pattern=".{11,11}" required)
+        .three.wide.field
+            label Telephone
+            input(type='text' name='telephone' placeholder='XXXXXXX' onkeyup="this.value = this.value.replace(/[^0-9]/, '')")
+        .four.wide.field.required
             label Username
             input(type='text' name='username' placeholder='Choose a username' onkeyup="this.value = this.value.replace(/[^a-z|0-9|_|.]/, '')" required)
-        .four.wide.field
+        .four.wide.field.required
             label Password
             input(type='password' name='password' placeholder='Choose a password' required)
         button(type='submit' class='ui green animated fade button')

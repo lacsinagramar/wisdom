@@ -10,26 +10,29 @@ block loob
         .row
             hr
             br
+        - var currentDate = dateTimeForPug + "T00:00";
+        - console.log(currentDate);
         #parent.row
             form.ui.form(method='POST' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
-                .three.wide.field
+                .three.wide.field.disabled
                     label Tutor
                     input(type='text' readonly required value=resultsForPug.strTutorUserName)
-                .three.wide.field
+                .three.wide.field.disabled
                     label Number of sessions
                     input(type='number' id='sessions' required readonly value=resultsForPug.intOfferedNoOfSessions)
-                .three.wide.field
+                .three.wide.field.disabled
                     label Price per session
                     input(type='number' value=resultsForPug.decPricePerSession readonly required step='0.01')
-                .three.wide.field
+                .four.wide.field.required
                     - var count = 1;
-                    label Session Date and Time
-                    - console.log(count + 'and' +resultsForPug.intOfferedNoOfSessions)
+                    label.header Session Date and Time
                     while count <= resultsForPug.intOfferedNoOfSessions
-                        input(type='datetime-local' name=`date${count}` required)
+                        label 
+                            | Session#{count}
+                        input(type='datetime-local' name=`date${count}` min=currentDate required)
                         - console.log(count)
                         - count++;
-                .three.wide.field
+                .three.wide.field.disabled
                     label Total Amount
                     input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
                 button(type='submit' class='ui green animated fade button')

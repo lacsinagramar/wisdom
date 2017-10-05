@@ -1,4 +1,5 @@
 var express = require('express');
+var moment = require('moment');
 var tutorRouter = express.Router();
 var studentRouter = express.Router();
 var authMiddleware = require('../auth/middlewares/auth');
@@ -100,11 +101,12 @@ tutorRouter.post('/offer/:id', (req, res) =>{
     });
 });
 
-tutorRouter.post('/confirm=:id', (req, res) =>{
+tutorRouter.post('/confirm=:id/:req', (req, res) =>{
     var db = require('../../lib/database')();
     var queryString = `UPDATE tblsessions set charStatusSession = 'S' where intTransactionID = ? AND charStatusSession = 'P'`;
     var queryString2 = `UPDATE tbltransaction set boolIsAccepted = 1 where intTransactionID = ?`;
     var queryString3 = `UPDATE tblrequest set charStatusRequest = 'S' where intRequestID = ?`;
+
     db.query(queryString,[req.params.id], (err,results,fields) =>{
         if(err) return console.log(err);
     })
@@ -114,7 +116,7 @@ tutorRouter.post('/confirm=:id', (req, res) =>{
 
     })
     
-    db.query(queryString3,[req.body.reqid], (err, results, fields) =>{
+    db.query(queryString3,[req.params.req], (err, results, fields) =>{
         if(err) return console.log(err);
 
         return res.redirect('/tutor');
@@ -186,7 +188,10 @@ studentRouter.get('/transaction/:offerID=:reqID', authMiddleware.authTransac,(re
     db.query(`SELECT intOfferedNoOfSessions, decPricePerSession, strTutorUserName from tbloffer WHERE intRequestID = ? AND intOfferID = ?`,[[req.params.reqID],[req.params.offerID]], (err, results, fields) =>{
         if(err) return console.log(err);
 
-        res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID});
+        var currentDate = new Date();
+        currentDate = moment(currentDate).format("YYYY-MM-DD");
+        console.log(currentDate);
+        return res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID, dateTimeForPug: currentDate});
     });
 });
 
@@ -265,7 +270,7 @@ studentRouter.post('/knotform', (req, res) =>{
             var x = results[0].subjCount;
             var subjCode = "SUBJ" + x;
             console.log(subjCode);
-            var queryString = `INSERT INTO tblsubjects VALUES (?,?)`;
+            var queryString = `INSERT INTO tblsubjects(strSubjectCode,strSubjectDesc) VALUES (?,?)`;
             db.query(queryString,[subjCode,addSubject], (err, results, fields) =>{
                 if(err) return console.log(err)
                 console.log(""+subjCode+"is added to DATABASE");

@@ -12,13 +12,13 @@ block loob
             br
         .row
             form.ui.form(method='POST' action='/student/knotform')
-                .three.wide.field
+                .three.wide.field.required
                     label Subject
                     input(type='text' name='subject' placeholder='Enter a Subject' required)
-                .three.wide.field
+                .three.wide.field.required
                     label Your budget per session
                     input(type='number' name='budget' placeholder='Enter your Budget' step='0.01' required)
-                .three.wide.field
+                .three.wide.field.required
                     label Requested Number of session
                     input(type='number' name='sessions' placeholder='Enter number of sessions' onkeyup="this.value = this.value.replace(/[^0-9|.]/, '')" required)
                 button(type='submit' class='ui green animated fade button')
