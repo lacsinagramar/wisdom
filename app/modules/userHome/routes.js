@@ -34,7 +34,7 @@ adminRouter.get('/subjects', (req, res) =>{
 
 adminRouter.get('/delete/:id', (req, res) =>{
     var db = require('../../lib/database')();
-    db.query(`UPDATE tblsubjects SET boolIsDeleted = 1 WHERE strSubjectCode = ${req.params.id}`, (err, results, fields) =>{
+    db.query(`UPDATE tblsubjects SET boolIsDeleted = 1 WHERE strSubjectCode = '${req.params.id}'`, (err, results, fields) =>{
         if(err) return console.log(err)
 
         return res.redirect('/admin/subjects');
@@ -438,6 +438,15 @@ studentRouter.get('/myunknots', (req, res) =>{
     function renderna(result, query){
         res.render('userHome/views/student/studentUnknots', {resultsForPug: result, reqQuery: query});
     }
+});
+
+studentRouter.get('/unknot/delete/:id', (req, res) =>{
+    var db = require('../../lib/database')();
+    db.query(`UPDATE tblrequest SET charStatusRequest = 'D' WHERE intRequestID = ${req.params.id}`, (err, results, fields) =>{
+        if(err) return console.log(err);
+
+        return res.redirect('/student/myunknots');
+    });
 });
 
 studentRouter.get('/knotform', (req, res) =>{

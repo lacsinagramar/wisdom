@@ -4,6 +4,7 @@ block title
     title Profile
 
 block body
+    -var hasReport = typeof query.reported!== 'undefined' ? 'User Reported' : '';
     style(type='text/css').
         body {
         background-image: url("/assets/images/homebg.png");
@@ -22,9 +23,19 @@ block body
     - var achievements ;
     - var rpersession;
     - var session = me;
+    script.
+        function reportFunction(){
+            document.getElementById('form').style.display="block";
+            document.getElementById('id').show();
+        }
+        function backFunction(){
+            document.getElementById('form').style.display="none";
+        }
     .ui.middle.aligned.center.aligned.grid
         .column
             .ui.centered.card
+                if(hasReport)
+                    .ui.teal.message #{hasReport}
                 each info in resultsForPug
                     -fname = info.strFirstName;
                     -lname = info.strLastName;
@@ -61,6 +72,22 @@ block body
                             span.icon
                                 i.mail.icon
                             span Message
+                        button(onclick='reportFunction()').ui.red.button 
+                            span.icon
+                                i.announcement.icon
+                            span Report
+                        form.ui.form(method='get' action=`/profile/report/${uname}` id='form' style='display: none;')
+                            .field
+                                label Reason
+                                textarea(name='reason')
+                            button(type='submit' class='ui red animated fade button')
+                                .visible.content Submit
+                                .hidden.content
+                                    i.check.icon
+                            button(type='button' onclick='backFunction()' id='back').ui.teal.animated.fade.button
+                                .visible.content Back
+                                .hidden.content
+                                     i.arrow.left.icon
                     else if session==uname
                         a(href=`/profile/edit`).ui.teal.button 
                                 span.icon

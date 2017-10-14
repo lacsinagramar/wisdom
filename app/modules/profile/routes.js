@@ -16,13 +16,13 @@ profileRouter.get('/:name', (req, res) =>{
         if(err) return console.log(err);
 
         if(results[0].charUserType === 'T') return ratings(results[0].strUsername)
-        else return res.render('profile/views/profile', {resultsForPug: results, me: req.session.user.strUsername});
+        else return res.render('profile/views/profile', {resultsForPug: results, me: req.session.user.strUsername, query: req.query});
     });
     function tutor(username,rating){
         db.query(queryString3,[username], (err, results, fields) =>{
             if(err) return console.log(err)
 
-            return res.render('profile/views/profile', {resultsForPug: results, tutorRatings: rating, me: req.session.user.strUsername});
+            return res.render('profile/views/profile', {resultsForPug: results, tutorRatings: rating, me: req.session.user.strUsername, query: req.query});
         });
     }
     function ratings(username){
@@ -43,6 +43,18 @@ profileRouter.get('/message/:name', (req, res) => {
         if(results[0].charUserType === 'T') return res.redirect(`/tutor/messages/${req.params.name}`);
         else if(results[0].charUserType === 'S') return res.redirect(`/student/messages/${req.params.name}`);
         else if(results[0].charUserType === 'A') return res.redirect(`/admin/messages/${req.params.name}`);
+    });
+});
+
+profileRouter.get('/report/:name', (req, res) =>{
+    var db = require('../../lib/database')();
+    var queryString = `INSERT INTO tblreport(strReporterUserName, strReportedUserName, strReason) VALUES(?,?,?)`
+
+    console.log(req.body,req.query)
+    db.query(queryString,[req.session.user.strUsername, req.params.name, req.query.reason], (err, results, fields) =>{
+        if(err) return console.log(err)
+
+        return res.redirect(`/profile/${req.params.name}?reported`)
     });
 });
 
