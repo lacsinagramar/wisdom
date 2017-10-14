@@ -5,6 +5,7 @@ block body
     - var hasIncorrect = typeof incorrect !== 'undefined' ? 'Incorrect username or password.' : ''
     - var hasUnauthorized = typeof unauthorized !== 'undefined' ? 'You are not authorized to view the page you\'re trying to access. Please log in first.' : ''
     - var hasSuccess = typeof success !=='undefined' ? 'Successfully Signed up' : ''
+    - var hasBanned = typeof banned !=='undefined'? 'Sorry, you are currently Banned please email our team at team@gmail.com' : ''
     style(type='text/css').
         body {
         background-image: url("/assets/images/homebg.png");
@@ -23,9 +24,9 @@ block body
         }
     .ui.middle.aligned.center.aligned.grid
         .column
-            if hasIncorrect || hasUnauthorized
+            if hasIncorrect || hasUnauthorized || hasBanned
                 .ui.red.message
-                    | #{hasIncorrect || hasUnauthorized}
+                    | #{hasIncorrect || hasUnauthorized || hasBanned}
             if hasSuccess
                 .ui.green.message
                     | #{hasSuccess}

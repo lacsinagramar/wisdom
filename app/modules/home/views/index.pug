@@ -105,7 +105,7 @@ block content
     - var isNotTutor = typeof reqQuery.notTutor !== 'undefined' ? 'Sorry that page is for Tutor Users only' : '';
     - var hasError = typeof reqQuery.error !== 'undefined' ? 'Something went wrong' : '';
     .pusher
-        .ui.inverted.vertical.masthead.center.aligned.segment(style='background-image: url("/assets/images/homebg.png");')
+        .ui.inverted.vertical.masthead.center.aligned.segment(style='background-image: url("/assets/images/homebg.png"); background-attachment: fixed;')
             .ui.container
                 .ui.large.secondary.inverted.simple.menu
                     .right.item
@@ -119,6 +119,10 @@ block content
                                 .item 
                                     | Welcome Student!
                                     a(href='/student').item #{sessionUserForPug}
+                            if userTypeForPug == 'A'
+                                .item 
+                                    | Welcome Admin!
+                                    a(href='/admin').item #{sessionUserForPug}
                         else
                             a(href='/login').ui.inverted.button Log in 
                             a(href='/signup').ui.inverted.button Sign Up
@@ -149,7 +153,7 @@ block content
                         p
                             | Organizing gets you where you’re going. We included a planner that sorts out your schedules to keep you posted.
                     .six.wide.right.floated.column
-                        img.ui.large.bordered.rounded.image(src='/assets/')
+                        img.ui.large.bordered.rounded.image(src='/assets/images/tutorimage.jpg')
                 .row
                     .center.aligned.column
                         a.ui.huge.button(style='background-color : #421f00; color: white;') Check Them Out

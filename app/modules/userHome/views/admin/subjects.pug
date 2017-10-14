@@ -1,0 +1,29 @@
+extends ./adminTemplate
+
+block title
+    title Subjects
+block loob
+    #content.column
+        h2.ui.huge.header.center.aligned Subjects on the Application
+        table.ui.single.line.striped.selectable.table
+            thead
+                tr
+                    th
+                        | Subject Code
+                    th
+                        | Subject Name
+            tbody
+            each subject in resultsForPug
+                tr
+                    td #{subject.strSubjectCode}
+                    td #{subject.strSubjectDesc}
+                    td
+                        a.button(class='ui red animated fade' href=`/admin/delete/${subject.strSubjectCode}`) 
+                            .visible.content Delete
+                            .hidden.content
+                                i.remove.icon
+                        a.button(class='ui teal animated fade' href=`/admin/edit/${subject.strSubjectCode}`) 
+                            .visible.content Edit
+                            .hidden.content
+                                i.pencil.icon
+        

@@ -1,0 +1,14 @@
+extends ./adminTemplate 
+block title
+    title Edit Subject
+block loob
+    #content.column
+        - var code = resultsForPug[0].strSubjectCode;
+        - var desc = resultsForPug[0].strSubjectDesc;
+        form.ui.form(method='post' action=`/admin/edit/${code}`)
+            .four.wide.field.required
+                input(type='text' name='name' value=`${desc}` placeholder='Enter a Subject' required)
+            button(type='submit' class='ui green animated fade button')
+                .visible.content Confirm
+                .hidden.content
+                    i.check.icon

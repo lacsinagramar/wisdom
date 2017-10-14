@@ -10,35 +10,64 @@ block loob
         .row
             hr
             br
-        - var currentDate = dateTimeForPug + "T00:00";
+        - var currentDate = dateTimeForPug;
         - console.log(currentDate);
+        - console.log('edit'+edit)
         #parent.row
-            form.ui.form(method='POST' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
-                .three.wide.field.disabled
-                    label Tutor
-                    input(type='text' readonly required value=resultsForPug.strTutorUserName)
-                .three.wide.field.disabled
-                    label Number of sessions
-                    input(type='number' id='sessions' required readonly value=resultsForPug.intOfferedNoOfSessions)
-                .three.wide.field.disabled
-                    label Price per session
-                    input(type='number' value=resultsForPug.decPricePerSession readonly required step='0.01')
-                .four.wide.field.required
-                    - var count = 1;
-                    label.header Session Date and Time
-                    while count <= resultsForPug.intOfferedNoOfSessions
-                        label 
-                            | Session#{count}
-                        input(type='datetime-local' name=`date${count}` min=currentDate required)
-                        - console.log(count)
-                        - count++;
-                .three.wide.field.disabled
-                    label Total Amount
-                    input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
-                button(type='submit' class='ui green animated fade button')
-                    .visible.content Confirm
-                    .hidden.content
-                        i.check.icon
+            if edit == 0
+                form.ui.form(method='POST' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
+                    .three.wide.field.disabled
+                        label Tutor
+                        input(type='text' readonly required value=resultsForPug.strTutorUserName)
+                    .three.wide.field.disabled
+                        label Number of sessions
+                        input(type='number' id='sessions' required readonly value=resultsForPug.intOfferedNoOfSessions)
+                    .three.wide.field.disabled
+                        label Price per session
+                        input(type='number' value=resultsForPug.decPricePerSession readonly required step='0.01')
+                    .four.wide.field.required
+                        - var count = 1;
+                        label.header Session Date and Time
+                        while count <= resultsForPug.intOfferedNoOfSessions
+                            label 
+                                | Session#{count}
+                            input(type='datetime-local' name=`date${count}` min=currentDate required)
+                            - console.log(count)
+                            - count++;
+                    .three.wide.field.disabled
+                        label Total Amount
+                        input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
+                    button(type='submit' class='ui green animated fade button')
+                        .visible.content Confirm
+                        .hidden.content
+                            i.check.icon
+            else if edit == 1
+                form.ui.form(method='POST' action=`/student/transaction/edit/${offerIDForPug}=${reqIDForPug}`)
+                    .three.wide.field.disabled
+                        label Tutor
+                        input(type='text' readonly required value=resultsForPug.strTutorUserName)
+                    .three.wide.field.disabled
+                        label Number of sessions
+                        input(type='number' id='sessions' required readonly value=resultsForPug.intOfferedNoOfSessions)
+                    .three.wide.field.disabled
+                        label Price per session
+                        input(type='number' value=resultsForPug.decPricePerSession readonly required step='0.01')
+                    .four.wide.field.required
+                        - var count = 1;
+                        label.header Session Date and Time
+                        while count <= resultsForPug.intOfferedNoOfSessions
+                            label 
+                                | Session#{count}
+                            input(type='datetime-local' name=`date${count}` min=currentDate required)
+                            - console.log(count)
+                            - count++;
+                    .three.wide.field.disabled
+                        label Total Amount
+                        input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
+                    button(type='submit' class='ui green animated fade button')
+                        .visible.content Confirm
+                        .hidden.content
+                            i.check.icon
                 
         //- script(type='text/javascript').
         //-     function formFunction(){

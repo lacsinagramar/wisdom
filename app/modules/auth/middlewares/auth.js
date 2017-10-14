@@ -18,6 +18,11 @@ exports.isTutor = (req, res, next) => {
     return res.redirect('/index?notTutor');
 }
 
+exports.isAdmin = (req, res, next) => {
+    if (req.session && req.session.user && Object.keys(req.session.user).length > 0 && req.session.user.charUserType === 'A') return next();
+    return res.redirect('/index?notAdmin');
+}
+
 exports.authTransac = (req, res, next) => {
     if (req.session && req.session.user && Object.keys(req.session.user).length > 0){
         var db = require('../../../lib/database')();

@@ -2,12 +2,50 @@ extends ./studentTemplate
 block title
     title Home
 block loob
+    style.
+        .rating {
+            overflow: hidden;
+            vertical-align: bottom;
+            display: inline-block;
+            width: auto;
+            height: 30px;
+        }
+
+        .rating > input {
+            opacity: 0;
+            margin-right: -100%;
+        }
+
+        .rating > label {
+            position: relative;
+            display: block;
+            float: right;
+            background: url('/assets/images/star-off.png');
+            background-size: 30px 30px;
+        }
+
+        .rating > label:before {
+            display: block;
+            opacity: 0;
+            content: '';
+            width: 30px;
+            height: 30px;
+            background: url('/assets/images/star.png');
+            background-size: 30px 30px;
+            transition: opacity 0.2s linear;
+        }
+
+        .rating > label:hover:before,  .rating > label:hover ~ label:before,  .rating:not(:hover) > :checked ~ label:before { opacity: 1;}
+    - var hasRated = typeof query.rated !== 'undefined'? 'Thank You! We appreciate your cooperation' : '';
     #content.column
         .ui.grid
             .row
                 h1.ui.huge.header
                     | Planner
             .ui.divider
+            if hasRated
+                .row 
+                    .ui.message.teal #{hasRated}
             .row
                 table.ui.single.line.striped.selectable.table
                     thead
@@ -26,3 +64,25 @@ block loob
                                 td #{result.strSubjectDesc}
                                 td
                                     a(type='button' style='background-color: #133872;color: white;').ui.button Request Reschedule
+            if (ratingForPug)
+                .row
+                    h2.ui.huge.header Rate your tutors
+                each tutor in ratingForPug
+                    .row
+                        .ui.card
+                            .content
+                                .header #{tutor.strTutorUserName}
+                                form.rating(method='get' action='/student/ratetutor')
+                                    input(type='hidden' name='transaction' value=`${tutor.intTransacRateID}`)
+                                    input#rating5(type='radio', name='rating', value='5')
+                                    label(for='rating5') 5
+                                    input#rating4(type='radio', name='rating', value='4')
+                                    label(for='rating4') 4
+                                    input#rating3(type='radio', name='rating', value='3')
+                                    label(for='rating3') 3
+                                    input#rating2(type='radio', name='rating', value='2')
+                                    label(for='rating2') 2
+                                    input#rating1(type='radio', name='rating', value='1')
+                                    label(for='rating1') 1
+                                    button(type='submit')
+                                p Press enter to submit

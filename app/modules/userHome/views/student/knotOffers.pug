@@ -24,10 +24,16 @@ block loob
                             td
                                 | #{result.decPricePerSession}
                             td
-                                a.ui.tiny.button(type='button' href=`/student/transaction=/${result.intOfferID}/and${reqID}` style='background-color : #133872; color:white;')
-                                    span.icon
-                                        i.check.icon
-                                    span Accept
+                                if result.charStatusOffer === 'P'
+                                    a.ui.tiny.button(type='button' href=`/student/transaction=/${result.intOfferID}/and${reqID}` style='background-color : #133872; color:white;')
+                                        span.icon
+                                            i.check.icon
+                                        span Accept
+                                else if result.charStatusOffer === 'W'
+                                    a.ui.tiny.button(type='button' href=`/student/transaction=/edit/${result.intOfferID}/and${reqID}` style='background-color : #133872; color:white;')
+                                        span.icon
+                                            i.pencil.icon
+                                        span Edit
                                 a.ui.tiny.button.red(type='button' href='#')
                                     span.icon
                                         i.remove.icon

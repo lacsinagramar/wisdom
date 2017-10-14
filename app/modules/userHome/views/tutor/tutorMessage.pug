@@ -1,0 +1,21 @@
+extends ./tutorTemplate
+block title
+    title #{kausapForPug} Messages
+block loob
+    #content.column
+        h3.ui.header.center.aligned #{kausapForPug}
+        hr
+        each result in resultsForPug
+            if result.strSenderUserName === meForPug
+                .bubble.me #{result.strMessageContent}
+            if result.strSenderUserName === kausapForPug
+                .bubble.you #{result.strMessageContent}
+            br
+            br
+            br
+        form.ui.form(method='post' action=`/tutor/messages/send/${kausapForPug}`)
+            textarea(rows='2' cols='6' name='content' placeholder='Write your message here...')
+            button(type='submit' class='ui animated fade button' style='background-color:#421f00;color:white;')
+                .visible.content
+                    i.send.icon
+                .hidden.content Send

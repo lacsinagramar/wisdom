@@ -1,0 +1,23 @@
+extends ./adminTemplate
+
+block title
+    title Banned Users
+block loob
+    #content.column
+        h2.ui.huge.header.center.aligned Banned Users
+        table.ui.single.line.striped.selectable.table
+            thead
+                tr
+                    th Username
+                    th Reason
+            tbody
+            each user in resultsForPug
+                tr
+                    td #{user.strBannedUserName}
+                    td #{user.strReason}
+                    td 
+                        a.button(class='ui teal animated fade' href=`/admin/unban/${user.intBanID}`) 
+                            .visible.content Unban
+                            .hidden.content
+                                i.unlock.icon
+        

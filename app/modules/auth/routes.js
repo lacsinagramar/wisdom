@@ -12,22 +12,37 @@ loginRouter.route('/')
     .post((req, res) => {
         var db = require('../../lib/database')();
 
-        db.query(`SELECT * FROM tbluser WHERE strUsername="${req.body.username}"`, (err, results, fields) => {
-            if (err) throw err;
-            if (results.length === 0) return res.redirect('/login?incorrect');
+        verify(req.body)
 
-            var user = results[0];
-            console.log(user);
-            if (user.strPassword !== req.body.password) return res.redirect('/login?incorrect');
+        function verify(body){
+            db.query(`SELECT * FROM tblban WHERE strBannedUserName = ? AND boolIsUnbanned != 1`,[body.username], (err, results, fields) =>{
+                if (err) return console.log(err)
 
-            delete user.strPassword;
+                if (results.length === 1) return res.redirect('/login?banned');
 
-            req.session.user = user;
-            
-            if(user.charUserType == 'T')return res.redirect('/tutor');
-            else if (user.charUserType == 'S') return res.redirect('/student');
+                else return login(body); 
+            });
+        }
 
-        });
+        function login(body){
+            db.query(`SELECT * FROM tbluser WHERE strUsername="${body.username}"`, (err, results, fields) => {
+                if (err) throw err;
+                if (results.length === 0) return res.redirect('/login?incorrect');
+    
+                var user = results[0];
+                console.log(user);
+                if (user.strPassword !== req.body.password) return res.redirect('/login?incorrect');
+    
+                delete user.strPassword;
+    
+                req.session.user = user;
+                
+                if(user.charUserType == 'T')return res.redirect('/tutor');
+                else if (user.charUserType == 'S') return res.redirect('/student');
+                else if (user.charUserType == 'A') return res.redirect('/admin');
+    
+            });
+        }
     });
 
 logoutRouter.get('/', (req, res) => {

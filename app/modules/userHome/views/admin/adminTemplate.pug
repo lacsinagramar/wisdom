@@ -6,9 +6,6 @@ block content
             a(href='/').header.item
                 img.ui.image(src="/assets/logo/name.png" style='width:90px; height:30px; align:middle;')
             .right.menu
-                .item
-                    .ui.small.input
-                        input(placeholder='Search Subject Name')
                 .ui.simple.dropdown.item
                     span.icon
                         i.settings.icon
@@ -17,17 +14,17 @@ block content
                         .header Settings
                         .divider
                         a(href='/logout').item Logout
-                a(href='/student').item Home
-                a(href='/student/profile').item Profile
+                a(href='/admin').item Home
+                a(href='/admin/profile').item Profile
 
         .ui.grid
             .row
                 #sidebar.column
                     .ui.secondary.vertical.fluid.menu
-                        a(href='/student').item Planner
-                        a(href='/student/myunknots').item My Unknots
-                        a(href='/student/knotform').item Knot Request Form
-                        a(href='/student/messages').item Messages
+                        a(href='/admin/subjects').item Subjects
+                        a(href='/admin/reported').item Reported Users
+                        a(href='/admin/banned').item Banned Users
+                        a(href='/admin/transactions').item Transaction List
                 block loob
         style(type='text/css').
             body {

@@ -1,0 +1,25 @@
+extends ./adminTemplate
+
+block title
+    title Reported Users
+block loob
+    #content.column
+        h2.ui.huge.header.center.aligned Reported Users
+        table.ui.single.line.striped.selectable.table
+            thead
+                tr
+                    th Username of Reporter
+                    th Reported Username
+                    th Reason
+            tbody
+            each user in resultsForPug
+                tr
+                    td #{user.strReporterUserName}
+                    td #{user.strReportedUserName}
+                    td #{user.strReason}
+                    td 
+                        a.button(class='ui red animated fade' href=`/admin/ban/${user.intReportID}/${user.strReportedUserName}`) 
+                            .visible.content Ban
+                            .hidden.content
+                                i.ban.icon
+        

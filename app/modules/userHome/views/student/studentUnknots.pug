@@ -3,10 +3,13 @@ extends ./studentTemplate
 block title
     title My Unknots
 block loob
+    - var hasSuccess = typeof reqQuery.success !== 'undefined'? 'Success' : ''
     #content.column
         .row
             h1.ui.huge.header
                 | My Unknots
+        if hasSuccess
+            .ui.green.small.message #{hasSuccess}
         .ui.hidden.divider
         .row
             table.ui.single.line.striped.selectable.table
