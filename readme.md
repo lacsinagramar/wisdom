@@ -1,2 +1,2 @@
 # Wisdom
-PROGRESS: 40% Full Implemented
+PROGRESS: 90% Full Implemented
