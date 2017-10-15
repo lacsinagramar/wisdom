@@ -1,16 +1,19 @@
 module.exports = (req, res) => {
     var hasSession;
-    if(req.session && req.session.user) 
-    {
-        var sessionUser = req.session.user.strUsername;
-        var userType = req.session.user.charUserType;
-        hasSession=1;
-        res.render('home/views/index', {hasSessionForPug: hasSession, sessionUserForPug: sessionUser, userTypeForPug: userType, reqQuery: req.query});
-    }
-    else 
-    {
-        hasSession=0;
-        res.render('home/views/index', {hasSessionForPug: hasSession, reqQuery: req.query});
+    
+    function renderna(){
+        if(req.session && req.session.user) 
+        {
+            var sessionUser = req.session.user.strUsername;
+            var userType = req.session.user.charUserType;
+            hasSession=1;
+            res.render('home/views/index', {hasSessionForPug: hasSession, sessionUserForPug: sessionUser, userTypeForPug: userType, reqQuery: req.query});
+        }
+        else 
+        {
+            hasSession=0;
+            res.render('home/views/index', {hasSessionForPug: hasSession, reqQuery: req.query});
+        }
     }
     var db = require('../../../lib/database')();
     var queryString2 = `SELECT * FROM tblsessions`
@@ -27,6 +30,7 @@ module.exports = (req, res) => {
     db.query(queryString2,(err, results, fields) => {
         if(err) return console.log(err)
 
+        if(results.length === 0) return renderna(); 
         var bilang = results.length;
         var dateNow = new Date();
         dateNow = Date.now();
@@ -75,6 +79,7 @@ module.exports = (req, res) => {
                     if(arrayOfTransactionIDs.length === 0) return callback();
                     else return validateFunction(arrayOfTransactionIDs, function(){
                         console.log('validated a transaction');
+                        return renderna();
                     });
                 });
             }
@@ -82,6 +87,7 @@ module.exports = (req, res) => {
                 if(arrayOfTransactionIDs.length === 0) return callback();
                 else return validateFunction(arrayOfTransactionIDs, function(){
                     console.log('validated a transaction');
+                    return renderna();
                 });
             }            
         });

@@ -79,15 +79,15 @@ signupRouter.post('/tutor', (req,res) =>{
         return db.query(queryString2, ['T', req.body.username, req.body.rate, req.body.achievements], (err, results, fields) =>{
             if (err) return console.log(err);
 
+            return addSubjects(tutorSubjects,queryString3,queryString4,req.body.username, function() {
+                res.redirect('/login?success')
+            });
         });
     });
 
     var queryString3 = `INSERT INTO tblsubjects(strSubjectCode,strSubjectDesc) VALUES(?,?)`
     var tutorSubjects = req.body.subjects.split(',');
     var queryString4 = `INSERT INTO tbltutorteaches (strTutorUserName,strSubjectCode) VALUES(?,?)`
-    addSubjects(tutorSubjects,queryString3,queryString4,req.body.username, function() {
-        res.redirect('/login?success')
-    });
     function addSubjects(subjects,insrtToTblSubj,insrtToTutorTeaches,username,callback){
         var subject = subjects.pop();
         subject = subject.toUpperCase();

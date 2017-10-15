@@ -34,8 +34,6 @@ block body
     .ui.middle.aligned.center.aligned.grid
         .column
             .ui.centered.card
-                if(hasReport)
-                    .ui.teal.message #{hasReport}
                 each info in resultsForPug
                     -fname = info.strFirstName;
                     -lname = info.strLastName;
@@ -93,5 +91,7 @@ block body
                                 span.icon
                                     i.pencil.icon
                                 span Edit
+            if(hasReport)
+                .ui.teal.message #{hasReport}
        
                 

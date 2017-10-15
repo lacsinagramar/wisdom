@@ -1,0 +1,307 @@
+CREATE SCHEMA wisdom;
+CREATE TABLE `wisdom`.`tbluser` (
+  `strUsername` VARCHAR(15) NOT NULL,
+  `strPassword` VARCHAR(30) NOT NULL,
+  `strFirstName` VARCHAR(45) NOT NULL,
+  `strLastName` VARCHAR(45) NOT NULL,
+  `dtBirthday` DATE NOT NULL,
+  `strContactNo` VARCHAR(19) NOT NULL,
+  `charUserType` CHAR(1) NOT NULL,
+  PRIMARY KEY (`strUsername`));
+
+CREATE TABLE `wisdom`.`tbltutor` (
+  `charUserType` CHAR(1) NOT NULL,
+  `strUserName` VARCHAR(15) NOT NULL,
+  `decRatePerSession` DECIMAL(5) NOT NULL,
+  `textAchievements` TEXT NULL,
+  PRIMARY KEY (`strUserName`));
+
+CREATE TABLE `wisdom`.`tblstudent` (
+  `charUserType` CHAR(1) NOT NULL,
+  `strUserName` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`strUserName`));
+
+CREATE TABLE `wisdom`.`tblmessagethread` (
+  `intThreadID` INT NOT NULL AUTO_INCREMENT,
+  `strSenderUserName` VARCHAR(15) NOT NULL,
+  `strReceiverUserName` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`intThreadID`));
+
+CREATE TABLE `wisdom`.`tblmessagecontent` (
+  `intContentID` INT NOT NULL AUTO_INCREMENT,
+  `intMessageThreadID` VARCHAR(45) NOT NULL,
+  `strMessageContent` VARCHAR(200) NOT NULL,
+  `dtmMessageSent` DATETIME NOT NULL,
+  PRIMARY KEY (`intContentID`));
+
+CREATE TABLE `wisdom`.`tbltutorteaches` (
+  `intTeachID` INT NOT NULL AUTO_INCREMENT,
+  `strTutorUserName` VARCHAR(15) NOT NULL,
+  `strSubjectCode` CHAR(8) NOT NULL,
+  PRIMARY KEY (`intTeachID`));
+
+CREATE TABLE `wisdom`.`tblsubjects` (
+  `strSubjectCode` CHAR(8) NOT NULL,
+  `strSubjectDesc` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`strSubjectCode`));
+
+CREATE TABLE `wisdom`.`tbltutorratings` (
+  `intRateID` INT NOT NULL AUTO_INCREMENT,
+  `strTutorUserName` VARCHAR(15) NOT NULL,
+  `intTransactionID` INT NOT NULL,
+  `strStudentUserName` VARCHAR(15) NOT NULL,
+  `intRate` INT NOT NULL,
+  `boolIsRated` TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`intRateID`));
+
+CREATE TABLE `wisdom`.`tblrequest` (
+  `intRequestID` INT NOT NULL AUTO_INCREMENT,
+  `strSubjectCode` CHAR(8) NOT NULL,
+  `strStudentUserName` VARCHAR(15) NOT NULL,
+  `decBudgetPerSession` DECIMAL(11) NOT NULL,
+  `intNoOfSessions` INT NOT NULL,
+  `charStatusRequest` CHAR(1) NOT NULL DEFAULT 'P',
+  PRIMARY KEY (`intRequestID`));
+
+CREATE TABLE `wisdom`.`tbloffer` (
+  `intOfferID` INT NOT NULL AUTO_INCREMENT,
+  `strTutorUserName` VARCHAR(15) NOT NULL,
+  `intRequestID` INT NOT NULL,
+  `decPricePerSession` DECIMAL(11) NOT NULL,
+  `intOfferedNoOfSessions` INT NOT NULL,
+  `charStatusOffer` CHAR(1) NOT NULL DEFAULT 'P',
+  PRIMARY KEY (`intOfferID`));
+
+CREATE TABLE `wisdom`.`tbltransaction` (
+  `intTransactionID` INT NOT NULL AUTO_INCREMENT,
+  `intRequestID` INT NOT NULL,
+  `intOfferID` INT NOT NULL,
+  `decTotalAmount` DECIMAL(13) NOT NULL,
+  `boolIsCancelled` TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`intTransactionID`));
+
+CREATE TABLE `wisdom`.`tblsessions` (
+  `intSessionID` INT NOT NULL AUTO_INCREMENT,
+  `intTransactionID` INT NOT NULL,
+  `dtmSessionDate` DATETIME NOT NULL,
+  `charStatus` CHAR(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`intSessionID`));
+
+
+ALTER TABLE `wisdom`.`tbltutor` 
+CHANGE COLUMN `charUserType` `charUserType` CHAR(1) NOT NULL DEFAULT 'T' ;
+ALTER TABLE `wisdom`.`tbltutor` 
+ADD CONSTRAINT `username_FK`
+  FOREIGN KEY (`strUserName`)
+  REFERENCES `wisdom`.`tbluser` (`strUsername`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `wisdom`.`tbltutor` 
+DROP FOREIGN KEY `username_FK`;
+ALTER TABLE `wisdom`.`tbltutor` 
+ADD CONSTRAINT `username_FK`
+  FOREIGN KEY (`strUserName`)
+  REFERENCES `wisdom`.`tbluser` (`strUsername`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tblstudent` 
+CHANGE COLUMN `charUserType` `charUserType` CHAR(1) NOT NULL DEFAULT 'S' ;
+ALTER TABLE `wisdom`.`tblstudent` 
+ADD CONSTRAINT `studentusername_FK`
+  FOREIGN KEY (`strUserName`)
+  REFERENCES `wisdom`.`tbluser` (`strUsername`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tblmessagethread` 
+ADD INDEX `senderUsername_FK_idx` (`strSenderUserName` ASC),
+ADD INDEX `receiverUsername_FK_idx` (`strReceiverUserName` ASC);
+ALTER TABLE `wisdom`.`tblmessagethread` 
+ADD CONSTRAINT `senderUsername_FK`
+  FOREIGN KEY (`strSenderUserName`)
+  REFERENCES `wisdom`.`tbluser` (`strUsername`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `receiverUsername_FK`
+  FOREIGN KEY (`strReceiverUserName`)
+  REFERENCES `wisdom`.`tbluser` (`strUsername`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tblmessagecontent` 
+CHANGE COLUMN `intMessageThreadID` `intMessageThreadID` INT NOT NULL ,
+ADD INDEX `messageThread_FK_idx` (`intMessageThreadID` ASC);
+ALTER TABLE `wisdom`.`tblmessagecontent` 
+ADD CONSTRAINT `messageThread_FK`
+  FOREIGN KEY (`intMessageThreadID`)
+  REFERENCES `wisdom`.`tblmessagethread` (`intThreadID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbltutorteaches` 
+ADD INDEX `tutorTeaches_FK_idx` (`strTutorUserName` ASC),
+ADD INDEX `subjectCode_FK_idx` (`strSubjectCode` ASC);
+ALTER TABLE `wisdom`.`tbltutorteaches` 
+ADD CONSTRAINT `tutorTeaches_FK`
+  FOREIGN KEY (`strTutorUserName`)
+  REFERENCES `wisdom`.`tbltutor` (`strUserName`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `subjectCode_FK`
+  FOREIGN KEY (`strSubjectCode`)
+  REFERENCES `wisdom`.`tblsubjects` (`strSubjectCode`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbltutorratings` 
+ADD INDEX `tutorRating_FK_idx` (`strTutorUserName` ASC),
+ADD INDEX `studentRating_FK_idx` (`strStudentUserName` ASC);
+ALTER TABLE `wisdom`.`tbltutorratings` 
+ADD CONSTRAINT `tutorRating_FK`
+  FOREIGN KEY (`strTutorUserName`)
+  REFERENCES `wisdom`.`tbltutor` (`strUserName`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `studentRating_FK`
+  FOREIGN KEY (`strStudentUserName`)
+  REFERENCES `wisdom`.`tblstudent` (`strUserName`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbltutorratings` 
+ADD INDEX `transactionIDRating_FK_idx` (`intTransactionID` ASC);
+ALTER TABLE `wisdom`.`tbltutorratings` 
+ADD CONSTRAINT `transactionIDRating_FK`
+  FOREIGN KEY (`intTransactionID`)
+  REFERENCES `wisdom`.`tbltransaction` (`intTransactionID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tblsessions` 
+ADD INDEX `sessionTransacID_FK_idx` (`intTransactionID` ASC);
+ALTER TABLE `wisdom`.`tblsessions` 
+ADD CONSTRAINT `sessionTransacID_FK`
+  FOREIGN KEY (`intTransactionID`)
+  REFERENCES `wisdom`.`tbltransaction` (`intTransactionID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tblrequest` 
+ADD INDEX `reqSubjectCode_FK_idx` (`strSubjectCode` ASC),
+ADD INDEX `reqUserName_FK_idx` (`strStudentUserName` ASC);
+ALTER TABLE `wisdom`.`tblrequest` 
+ADD CONSTRAINT `reqSubjectCode_FK`
+  FOREIGN KEY (`strSubjectCode`)
+  REFERENCES `wisdom`.`tblsubjects` (`strSubjectCode`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `reqUserName_FK`
+  FOREIGN KEY (`strStudentUserName`)
+  REFERENCES `wisdom`.`tblstudent` (`strUserName`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbloffer` 
+ADD INDEX `offerRequestID_FK_idx` (`intRequestID` ASC),
+ADD INDEX `offerUserName_FK_idx` (`strTutorUserName` ASC);
+ALTER TABLE `wisdom`.`tbloffer` 
+ADD CONSTRAINT `offerRequestID_FK`
+  FOREIGN KEY (`intRequestID`)
+  REFERENCES `wisdom`.`tblrequest` (`intRequestID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `offerUserName_FK`
+  FOREIGN KEY (`strTutorUserName`)
+  REFERENCES `wisdom`.`tbltutor` (`strUserName`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbltransaction` 
+ADD CONSTRAINT `transacResponseID_FK`
+  FOREIGN KEY (`intOfferID`)
+  REFERENCES `wisdom`.`tbloffer` (`intOfferID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+
+
+ALTER TABLE `wisdom`.`tbltutorratings` 
+DROP FOREIGN KEY `transactionIDRating_FK`;
+ALTER TABLE `wisdom`.`tbltutorratings` 
+DROP COLUMN `intTransactionID`,
+CHANGE COLUMN `intRateID` `intTransacRateID` INT(11) NOT NULL ,
+DROP INDEX `transactionIDRating_FK_idx` ;
+ALTER TABLE `wisdom`.`tbltutorratings` 
+ADD CONSTRAINT `transacRating_FK`
+  FOREIGN KEY (`intTransacRateID`)
+  REFERENCES `wisdom`.`tbltransaction` (`intTransactionID`)
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE;
+
+ALTER TABLE `wisdom`.`tbltransaction` 
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (`intRequestID`, `intOfferID`),
+ADD UNIQUE INDEX `intTransactionID_UNIQUE` (`intTransactionID` ASC);
+
+ALTER TABLE `wisdom`.`tbloffer` 
+CHANGE COLUMN `decPricePerSession` `decPricePerSession` DECIMAL(5,2) NOT NULL;
+
+ALTER TABLE `wisdom`.`tbltransaction` 
+CHANGE COLUMN `decTotalAmount` `decTotalAmount` DECIMAL(7,2) NOT NULL ;
+
+ALTER TABLE `wisdom`.`tblrequest` 
+CHANGE COLUMN `decBudgetPerSession` `decBudgetPerSession` DECIMAL(5,2) NOT NULL;
+ALTER TABLE `wisdom`.`tbltransaction` 
+ADD COLUMN `boolIsAccepted` TINYINT(4) NOT NULL DEFAULT 0 AFTER `decTotalAmount`;
+
+ALTER TABLE `wisdom`.`tblsessions` 
+CHANGE COLUMN `charStatus` `charStatusSession` CHAR(1) NOT NULL DEFAULT 'P';
+ALTER TABLE `wisdom`.`tblsubjects` 
+ADD COLUMN `boolIsDeleted` TINYINT NOT NULL DEFAULT 0 AFTER `strSubjectDesc`;
+
+CREATE TABLE `wisdom`.`tblreport` (
+  `intReportID` INT NOT NULL AUTO_INCREMENT,
+  `strReporterUserName` VARCHAR(15) NOT NULL,
+  `strReportedUserName` VARCHAR(15) NOT NULL,
+  `strReason` VARCHAR(140) NOT NULL,
+  PRIMARY KEY (`intReportID`),
+  INDEX `ReporterUserName_FK_idx` (`strReporterUserName` ASC),
+  INDEX `ReportedUserName_FK_idx` (`strReportedUserName` ASC),
+  CONSTRAINT `ReporterUserName_FK`
+    FOREIGN KEY (`strReporterUserName`)
+    REFERENCES `wisdom`.`tbluser` (`strUsername`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `ReportedUserName_FK`
+    FOREIGN KEY (`strReportedUserName`)
+    REFERENCES `wisdom`.`tbluser` (`strUsername`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+CREATE TABLE `wisdom`.`tblban` (
+  `intBanID` INT NOT NULL,
+  `strBannedUserName` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`intBanID`),
+  INDEX `bannedUserName_FK_idx` (`strBannedUserName` ASC),
+  UNIQUE INDEX `intBanID_UNIQUE` (`intBanID` ASC),
+  CONSTRAINT `banID_FK`
+    FOREIGN KEY (`intBanID`)
+    REFERENCES `wisdom`.`tblreport` (`intReportID`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `bannedUserName_FK`
+    FOREIGN KEY (`strBannedUserName`)
+    REFERENCES `wisdom`.`tbluser` (`strUsername`)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE);
+
+ALTER TABLE `wisdom`.`tblban` 
+ADD COLUMN `boolIsUnbanned` TINYINT NOT NULL DEFAULT 0 AFTER `strBannedUserName`;
+
+ALTER TABLE `wisdom`.`tbltutorratings` 
+CHANGE COLUMN `intRate` `intRate` INT(11) NOT NULL DEFAULT 0 ;
+
+
+INSERT INTO `wisdom`.`tbluser` (`strUsername`, `strPassword`, `strFirstName`, `strLastName`, `dtBirthday`, `strContactNo`, `charUserType`) VALUES ('admin', 'admin', 'admin', 'admin', '1111-11-11', '11111111111', 'A');

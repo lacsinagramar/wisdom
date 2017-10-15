@@ -130,6 +130,10 @@ tutorRouter.get('/', (req,res) => {
     });
 });
 
+tutorRouter.get('/profile', (req, res) =>{
+    res.redirect(`/profile/${req.session.user.strUsername}`);
+});
+
 tutorRouter.get('/unknots', (req,res) =>{
     var db = require('../../lib/database')();
     db.query(`Select tblrequest.intRequestID, tblsubjects.strSubjectDesc, tblrequest.strStudentUserName, tblrequest.decBudgetPerSession, tblrequest.intNoOfSessions From tblrequest JOIN tblsubjects ON tblrequest.strSubjectCode = tblsubjects.strSubjectCode WHERE tblrequest.charStatusRequest = 'P' `, (err,results,fields)=>{
@@ -394,6 +398,10 @@ studentRouter.get('/ratetutor', (req, res) =>{
 
         return res.redirect('/student?rated');
     });
+});
+
+studentRouter.get('/profile', (req, res) =>{
+    res.redirect(`/profile/${req.session.user.strUsername}`);
 });
 
 studentRouter.get('/transaction=/:offerID/and:reqID', (req,res) =>{
