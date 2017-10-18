@@ -26,7 +26,8 @@ block loob
                     - console.log(resultsForPug)
                     each result in resultss
                         tr
-                            td #{result.strStudentUserName}
+                            td
+                                a(href=`/profile/${result.strStudentUserName}`) #{result.strStudentUserName}
                             td #{result.strSubjectDesc}
                             td #{result.decBudgetPerSession}
                             td #{result.intNoOfSessions}

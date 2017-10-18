@@ -1,0 +1,31 @@
+extends ./adminTemplate
+
+block title
+    title Users
+block loob
+    #content.column
+        h2.ui.huge.header.center.aligned All Users in the App
+        table.ui.single.line.striped.selectable.table
+            thead
+                tr
+                    th Username
+                    th First Name
+                    th Last Name
+                    th Birthday
+                    th Contact No.
+                    th User Type
+            tbody
+            each user in resultsForPug
+                tr
+                    td
+                        a(href=`/profile/${user.strUsername}`) #{user.strUsername}
+                    td #{user.strFirstName}
+                    td #{user.strLastName}
+                    td #{user.dtBirthday}
+                    td #{user.strContactNo}
+                    if user.charUserType == 'S'
+                        td Student
+                    else if user.charUserType == 'T'
+                        td Tutor
+                    else
+                        td Admin

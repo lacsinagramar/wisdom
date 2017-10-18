@@ -107,6 +107,48 @@ adminRouter.get('/unban/:id', (req, res) =>{
         return res.redirect('/admin/banned');
     });
 });
+
+adminRouter.get('/users', (req, res) =>{
+    var db = require('../../lib/database')();
+    db.query('SELECT * FROM tbluser', (err, results, fields) =>{
+        if(err) return console.log(err)
+
+        results= results.filter(function(record) {return record.charUserType !== 'A'});
+        console.log(results.length);
+        for(var o=0;o<results.length;o++){
+            results[o].dtBirthday = moment(results[o].dtBirthday).format('MMMM DD, YYYY');
+        }
+        return renderna(results);
+    });
+    function renderna(results){
+        res.render('userHome/views/admin/allUsers', {resultsForPug: results});
+    }
+});
+
+adminRouter.get('/tutors', (req, res) =>{
+    var db = require('../../lib/database')();
+    db.query('SELECT * FROM tbltutor', (err, results, fields) =>{
+        if(err) return console.log(err)
+
+        return renderna(results);
+    });
+    function renderna(results){
+        res.render('userHome/views/admin/allTutors', {resultsForPug: results});
+    }
+});
+
+adminRouter.get('/students', (req, res) =>{
+    var db = require('../../lib/database')();
+    db.query('SELECT * FROM tblstudent', (err, results, fields) =>{
+        if(err) return console.log(err)
+
+        return renderna(results);
+    });
+    function renderna(results){
+        res.render('userHome/views/admin/allStudents', {resultsForPug: results});
+    }
+});
+
 // tutorRouter
 
 //get

@@ -1,0 +1,19 @@
+extends ./adminTemplate
+
+block title
+    title Tutors
+block loob
+    #content.column
+        h2.ui.huge.header.center.aligned Tutors in the App
+        table.ui.single.line.striped.selectable.table
+            thead
+                tr
+                    th Username
+                    th Rate Per Session
+            tbody
+            each user in resultsForPug
+                tr
+                    td #{user.strUserName}
+                    td #{user.decRatePerSession}
+                    td 
+                        a(href=`/profile/${user.strUserName}` style='color:white; background-color: #421f00').ui.button View More Information
