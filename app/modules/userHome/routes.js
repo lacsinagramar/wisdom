@@ -178,11 +178,49 @@ tutorRouter.get('/profile', (req, res) =>{
 
 tutorRouter.get('/unknots', (req,res) =>{
     var db = require('../../lib/database')();
-    db.query(`Select tblrequest.intRequestID, tblsubjects.strSubjectDesc, tblrequest.strStudentUserName, tblrequest.decBudgetPerSession, tblrequest.intNoOfSessions From tblrequest JOIN tblsubjects ON tblrequest.strSubjectCode = tblsubjects.strSubjectCode WHERE tblrequest.charStatusRequest = 'P' `, (err,results,fields)=>{
-        if (err) return console.log(err);
+    var queryString2 = `SELECT tblsubjects.strSubjectCode FROM tbltutorteaches
+    JOIN tblsubjects ON tbltutorteaches.strSubjectCode = tblsubjects.strSubjectCode
+    WHERE tbltutorteaches.strTutorUserName = '${req.session.user.strUsername}'`;
+    var queryString =`Select tblrequest.intRequestID, tblsubjects.strSubjectDesc, tblrequest.strStudentUserName, tblrequest.decBudgetPerSession, tblrequest.intNoOfSessions
+    From tblrequest 
+    JOIN tblsubjects ON tblrequest.strSubjectCode = tblsubjects.strSubjectCode
+    WHERE tblrequest.charStatusRequest = 'P' AND tblrequest.strSubjectCode = ?`;
+    var renderArray = [];
+    db.query(queryString2, (err, results, fields) =>{
+        if (err) return console.log(err)
 
-        res.render('userHome/views/tutor/tutorUnknots', {resultsForPug: results});
+        return firstQuery(results, renderArray, function(){
+            console.log('firstQuery DONE!')
+        });
     });
+
+    function firstQuery(subjects,pangRender,callback){
+        console.log(subjects);
+        if(subjects.length!==0){
+            var subject = subjects.pop();
+            console.log(subject);
+            db.query(queryString, [subject.strSubjectCode], (err, results, fields) =>{
+                if(err) return console.log(err)
+
+                if(results.length!==0) {
+                    for(var l=0;l<results.length;l++){
+                        pangRender.push(results[l]);
+                    }
+                }
+                
+                if(subjects.length===0) return renderFunction(pangRender);
+
+                else return firstQuery(subjects, pangRender, function(){
+                    return renderFunction(pangRender);
+                });
+            });
+        }
+    }
+
+    function renderFunction(finalResults){
+        console.log(finalResults);
+        res.render('userHome/views/tutor/tutorUnknots', {resultsForPug: finalResults});
+    }
 });
 
 tutorRouter.get('/notifications', (req, res) =>{
@@ -459,6 +497,7 @@ studentRouter.get('/transaction=/edit/:offerID/and:reqID', (req,res) =>{
 
         var currentDate = new Date();
         currentDate = Date.now();
+        //currentDate = currentDate.setDate(Date.now().getDate() + 2);
         currentDate = moment(currentDate).format("YYYY-MM-DDTHH:mm");
         console.log('currentDatetime is '+currentDate);
         return res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID, dateTimeForPug: currentDate, edit: 1});
@@ -472,6 +511,7 @@ studentRouter.get('/transaction/:offerID=:reqID', authMiddleware.authTransac,(re
 
         var currentDate = new Date();
         currentDate = Date.now();
+        //currentDate = currentDate.setDate(Date.now().getDate() + 2);
         currentDate = moment(currentDate).format("YYYY-MM-DDTHH:mm");
         console.log('currentDatetime is '+currentDate);
         return res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID, dateTimeForPug: currentDate, edit: 0});
