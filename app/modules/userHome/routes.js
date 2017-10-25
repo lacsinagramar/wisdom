@@ -498,7 +498,7 @@ studentRouter.get('/transaction=/edit/:offerID/and:reqID', (req,res) =>{
         var currentDate = new Date();
         currentDate = Date.now();
         //currentDate = currentDate.setDate(Date.now().getDate() + 2);
-        currentDate = moment(currentDate).format("YYYY-MM-DDTHH:mm");
+        currentDate = moment(currentDate).add(2,'days').format("YYYY-MM-DD");
         console.log('currentDatetime is '+currentDate);
         return res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID, dateTimeForPug: currentDate, edit: 1});
     });
@@ -512,7 +512,7 @@ studentRouter.get('/transaction/:offerID=:reqID', authMiddleware.authTransac,(re
         var currentDate = new Date();
         currentDate = Date.now();
         //currentDate = currentDate.setDate(Date.now().getDate() + 2);
-        currentDate = moment(currentDate).format("YYYY-MM-DDTHH:mm");
+        currentDate = moment(currentDate).add(2,'days').format("YYYY-MM-DD");
         console.log('currentDatetime is '+currentDate);
         return res.render('userHome/views/student/studentForm', {resultsForPug: results[0], reqIDForPug: req.params.reqID, offerIDForPug: req.params.offerID, dateTimeForPug: currentDate, edit: 0});
     });

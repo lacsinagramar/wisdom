@@ -10,12 +10,12 @@ block loob
         .row
             hr
             br
-        - var currentDate = dateTimeForPug;
+        - var currentDate = dateTimeForPug + 'T00:00';
         - console.log(currentDate);
         - console.log('edit'+edit)
         #parent.row
             if edit == 0
-                form.ui.form(method='POST' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
+                form.ui.form(method='POST' id='myForm' action=`/student/transaction/${offerIDForPug}=${reqIDForPug}`)
                     .three.wide.field.disabled
                         label Tutor
                         input(type='text' readonly required value=resultsForPug.strTutorUserName)
@@ -31,18 +31,22 @@ block loob
                         while count <= resultsForPug.intOfferedNoOfSessions
                             label 
                                 | Session#{count}
-                            input(type='datetime-local' name=`date${count}` min=currentDate required)
+                            input(id =`datesession${count}` type='datetime-local' name=`date${count}` min=currentDate required)
                             - console.log(count)
                             - count++;
                     .three.wide.field.disabled
                         label Total Amount
                         input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
-                    button(type='submit' class='ui green animated fade button')
-                        .visible.content Confirm
+                    button#validate(type='button' class='ui blue animated fade button')
+                        .visible.content Validate
+                        .hidden.content
+                            i.check.icon
+                    button#submit(type='submit' class='ui green animated fade button' style='display: none;')
+                        .visible.content Submit
                         .hidden.content
                             i.check.icon
             else if edit == 1
-                form.ui.form(method='POST' action=`/student/transaction/edit/${offerIDForPug}=${reqIDForPug}`)
+                form.ui.form(method='POST' id='myForm' action=`/student/transaction/edit/${offerIDForPug}=${reqIDForPug}`)
                     .three.wide.field.disabled
                         label Tutor
                         input(type='text' readonly required value=resultsForPug.strTutorUserName)
@@ -58,17 +62,92 @@ block loob
                         while count <= resultsForPug.intOfferedNoOfSessions
                             label 
                                 | Session#{count}
-                            input(type='datetime-local' name=`date${count}` min=currentDate required)
+                            input(id =`datesession${count}` type='datetime-local' name=`date${count}` min=currentDate required)
                             - console.log(count)
                             - count++;
                     .three.wide.field.disabled
                         label Total Amount
                         input(type='number' name='total' value=(resultsForPug.decPricePerSession*resultsForPug.intOfferedNoOfSessions) readonly required step='0.01')
-                    button(type='submit' class='ui green animated fade button')
-                        .visible.content Confirm
+                    button#validate(type='button' class='ui blue animated fade button')
+                        .visible.content Validate
                         .hidden.content
                             i.check.icon
-                
+                    button#submit(type='submit' class='ui green animated fade button' style='display: none;')
+                        .visible.content Submit
+                        .hidden.content
+                            i.check.icon
+    script(src="/assets/jquery.min.js")
+    script(src="/assets/moment.min.js")
+    script(type='text/javascript').
+        $(document).ready(function(){
+            $('#validate').click(function(){
+                var currentDate = '!{currentDate}'
+                currentDate = moment(currentDate);
+                var sessions = !{resultsForPug.intOfferedNoOfSessions}
+                var points = 0;
+                var swapped;
+                var a = [];
+                var aDate = [];
+                for(var j = 1;j<=sessions;j++){
+                    a.push(parseInt(new Date($('#datesession' + j).val()).getDate()));
+                    aDate.push(moment(new Date($('#datesession' + j).val())));
+                }
+                alert(a);
+                do {
+                    swapped = false;
+                    for (var o=0; o < a.length-1; o++) {
+                        if (a[o] > a[o+1]) {
+                            var temp = a[o];
+                            a[o] = a[o+1];
+                            a[o+1] = temp;
+                            swapped = true;
+                        }
+                        if (aDate[o] > aDate[o+1]) {
+                            var temp = aDate[o];
+                            aDate[o] = aDate[o+1];
+                            aDate[o+1] = temp;
+                            swapped = true;
+                        }
+                    }
+                } while (swapped);
+                var firstDate = moment(aDate[0]);
+                alert('first date is' +firstDate);
+                var validate = currentDate.diff(firstDate, 'days');
+                alert('new '+a)
+                alert("validate"+validate);
+                if(validate > 0){
+                    alert('First Session date must be 2 days or more after today');
+                    return;
+                } 
+                for(var i = 0; i < a.length-1; i++){
+                    var d1 = a[i];
+                    var d2 = a[i+1];
+                    var date1 = aDate[i];
+                    var date2 = aDate[i+1];
+                    alert(date2.diff(date1, 'days'))
+                    if(date2.diff(date1, 'days') > 2 || date2.diff(date1, 'days') < -2){
+                        points++;
+                    }
+                    //- if(d1-d2 > 2 || d1-d2 < -2){
+                    //-     points++; 
+                    //- }
+                    else{
+                        alert('Allowance between '+d1 +' and '+d2 +' is Invalid\nPlease give the tutor 2 day allowances every session')
+                    }
+                }
+                if(points === sessions - 1){
+                    alert('Dates are valid Please Click the submit button')
+                    document.getElementById('submit').style.display='block';
+                    document.getElementById('validate').style.display='none';
+                    for(var h = 1;h<=sessions;h++){
+                    document.getElementById('datesession'+h).disabled = true;
+                }
+                }
+                else{
+                    alert('Dates are invalid')
+                }
+            })
+        })               
         //- script(type='text/javascript').
         //-     function formFunction(){
         //-         var parent = document.getElementById("parent")
